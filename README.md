@@ -6,11 +6,11 @@ This repository contains the Opencart wallee payment module that enables the sho
 ## Requirements
 
 * [Opencart](https://www.opencart.com/) 2.0.x
-* [PHP](http://php.net/) 5.3 or later
+* [PHP](http://php.net/) 5.4 or later
 
 ## Documentation
 
-* [Getting Started](https://github.com/wallee-payment/Opencart-2.0/wiki/Getting-Started)
+* Coming soon
 
 ## License
 
