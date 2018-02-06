@@ -12,15 +12,17 @@
 		$data['cart'] = $this->load->controller('common/cart');
             ]]></search>
 			<add position="after"><![CDATA[
-		$this->load->controller('extension/wallee/event/includeDeviceIdentifier');
-		
-		\WalleeHelper::instance($this->registry)->refreshWebhook();
-		\Wallee\Entity\Cron::cleanUpHangingCrons($this->registry);
-		\Wallee\Entity\Cron::insertNewPendingCron($this->registry);
-		$wallee_cron_token = \Wallee\Entity\Cron::getCurrentSecurityTokenForPendingCron($this->registry);
-		if($wallee_cron_token) {
-			$data['wallee_cron'] = \WalleeHelper::createUrl($this->url, 'extension/wallee/cron', array('security_token' => $wallee_cron_token), $this->config->get('config_secure'));
-		}
+		try{
+			$this->load->controller('extension/wallee/event/includeDeviceIdentifier');
+			
+			\WalleeHelper::instance($this->registry)->refreshWebhook();
+			\Wallee\Entity\Cron::cleanUpHangingCrons($this->registry);
+			\Wallee\Entity\Cron::insertNewPendingCron($this->registry);
+			$wallee_cron_token = \Wallee\Entity\Cron::getCurrentSecurityTokenForPendingCron($this->registry);
+			if($wallee_cron_token) {
+				$data['wallee_cron'] = \WalleeHelper::createUrl($this->url, 'extension/wallee/cron', array('security_token' => $wallee_cron_token), $this->config->get('config_secure'));
+			}
+		} catch (Exception $e) { \WalleeHelper::instance($this->registry)->log($e->getMessage()); }
             ]]></add>
 		</operation>
 	</file>

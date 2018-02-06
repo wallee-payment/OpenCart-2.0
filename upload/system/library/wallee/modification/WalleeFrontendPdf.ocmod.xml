@@ -9,7 +9,7 @@
 	<file path="catalog/controller/account/order.php">
 		<operation>
 			<search><![CDATA[
-			$this->response->setOutput($this->load->view('account/order_info.tpl', $data));
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/account/order_info.tpl')) {
             ]]></search>
 			<add position="before"><![CDATA[
 			$this->load->model('extension/wallee/order');

@@ -318,7 +318,7 @@ class WalleeHelper {
 			try {
 				$language_provider = \Wallee\Provider\Language::instance($this->registry);
 				$primary_language = $language_provider->findPrimary($language);
-				if (isset($strings[$primary_language->getIetfCode()])) {
+				if ($primary_language && isset($strings[$primary_language->getIetfCode()])) {
 					return $strings[$primary_language->getIetfCode()];
 				}
 			}

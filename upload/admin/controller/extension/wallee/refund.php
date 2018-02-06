@@ -62,6 +62,10 @@ class ControllerExtensionWalleeRefund extends \Wallee\Controller\AbstractControl
 		}
 		
 		$currency_info = \Wallee\Provider\Currency::instance($this->registry)->find($order_info['currency_code']);
+		if(!$currency_info) {
+			$this->displayError($this->language->get('error_currency'));
+			return;
+		}
 		
 		$variables['currency_step'] = pow(10, -$currency_info->getFractionDigits());
 		$variables['currency_decimals'] = $currency_info->getFractionDigits();

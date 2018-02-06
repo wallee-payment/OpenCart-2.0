@@ -239,3 +239,4 @@ $_['type_fee']										= 'Fee';
 $_['error_order_id']								= 'No order id set.';
 $_['error_not_wallee']								= 'The order id could not be matched to a wallee transaction.';
 $_['error_empty_refund']							= 'An empty refund is not permitted.';
+$_['error_currency']								= 'Could not retrieve currency information.';
