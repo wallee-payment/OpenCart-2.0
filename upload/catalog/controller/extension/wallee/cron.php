@@ -23,31 +23,19 @@ class ControllerExtensionWalleeCron extends Controller {
 			}
 		}
 		catch (Exception $e) {
-			\WalleeHelper::instance($this->registry)->log('Updating cron failed: ' . $e->getMessage(), \WalleeHelper::LOG_ERROR);
+			// 1062 is mysql duplicate constraint error. This is expected and doesn't need to be logged.
+			if (strpos('1062', $e->getMessage()) === false && strpos('constraint_key', $e->getMessage()) === false) {
+				\WalleeHelper::instance($this->registry)->log('Updating cron failed: ' . $e->getMessage(), \WalleeHelper::LOG_ERROR);
+			}
 			\WalleeHelper::instance($this->registry)->dbTransactionRollback();
 			die();
 		}
 		
-		$time = new DateTime();
-		// We reduce max running time, so th cron has time to clean up.
-		$maxTime = $time->format("U");
-		$maxTime += \Wallee\Entity\Cron::MAX_RUN_TIME_MINUTES * 60 - 60;
-		$maxTime += 5;
-		$error = '';
-		
-		try {
-			$this->runTasks();
-		}
-		catch (Exception $e) {
-			$error = "Module '$module' does not handle all exceptions in task '$callableName'. Exception Message: " . $e->getMessage();
-		}
-		if ($maxTime + 15 < time()) {
-			$error += "Module '$module' returns not callable task '$callableName' does not respect the max runtime.";
-		}
+		$errors = $this->runTasks();
 		
 		try {
 			\WalleeHelper::instance($this->registry)->dbTransactionStart();
-			$result = \Wallee\Entity\Cron::setComplete($this->registry, $security_token, $error);
+			$result = \Wallee\Entity\Cron::setComplete($this->registry, $security_token, implode('. ', $errors));
 			\WalleeHelper::instance($this->registry)->dbTransactionCommit();
 			if (!$result) {
 				\WalleeHelper::instance($this->registry)->log('Could not update finished cron job.', \WalleeHelper::LOG_ERROR);
@@ -63,17 +51,29 @@ class ControllerExtensionWalleeCron extends Controller {
 	}
 
 	private function runTasks(){
+		$errors = array();
 		foreach (\Wallee\Entity\AbstractJob::loadNotSent($this->registry) as $job) {
 			try {
-				if ($job instanceof \Wallee\Entity\CompletionJob) {
-					$transaction_info = \Wallee\Entity\TransactionInfo::loadByTransaction($this->registry, $job->getSpaceId(),
-							$job->getTransactionId());
-					\Wallee\Service\Transaction::instance($this->registry)->updateLineItemsFromOrder($transaction_info->getOrderId());
+				switch (get_class($job)) {
+					case \Wallee\Entity\CompletionJob::class:
+						$transaction_info = \Wallee\Entity\TransactionInfo::loadByTransaction($this->registry, $job->getSpaceId(),
+								$job->getTransactionId());
+						\Wallee\Service\Transaction::instance($this->registry)->updateLineItemsFromOrder($transaction_info->getOrderId());
+						\Wallee\Service\Completion::instance($this->registry)->send($job);
+						break;
+					case \Wallee\Entity\RefundJob::class:
+						\Wallee\Service\Refund::instance($this->registry)->send($job);
+						break;
+					case \Wallee\Entity\VoidJob::class:
+						\Wallee\Service\VoidJob::instance($this->registry)->send($job);
+						break;
+					default:
+						break;
 				}
-				\Wallee\Service\Completion::instance($this->registry)->send($job);
 			}
 			catch (Exception $e) {
 				\WalleeHelper::instance($this->registry)->log('Could not update job: ' . $e->getMessage(), \WalleeHelper::LOG_ERROR);
+				$errors[] = $e->getMessage();
 			}
 		}
 	}
@@ -89,8 +89,7 @@ class ControllerExtensionWalleeCron extends Controller {
 		}
 		header("Content-Encoding: none");
 		header("Connection: close");
-		header('Content-Type: image/png');
-		header("Content-Length: 0");
+		header('Content-Type: text/javascript');
 		ob_end_flush();
 		flush();
 		if (is_callable('fastcgi_finish_request')) {

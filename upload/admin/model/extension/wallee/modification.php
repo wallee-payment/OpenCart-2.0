@@ -4,25 +4,37 @@ use Wallee\Model\AbstractModel;
 
 class ModelExtensionWalleeModification extends AbstractModel {
 	private static $modifications = array(
-		'WalleeCore' => 'WalleeCore.ocmod.xml',
-		'WalleeAlerts' => 'WalleeAlerts.ocmod.xml',
-		'WalleeLogging' => 'WalleeLogging.ocmod.xml',
-		'WalleeQuickCheckoutCompatibility' => 'WalleeQuickCheckoutCompatibility.ocmod.xml',
-		'WalleePreventConfirmationEmail' => 'WalleePreventConfirmationEmail.ocmod.xml',
-		'WalleeAdministration' => 'WalleeAdministration.ocmod.xml',
-		'WalleeFrontendPdf' => 'WalleeFrontendPdf.ocmod.xml',
-		'WalleeEvents' => 'WalleeEvents.ocmod.xml' 
+		'WalleeCore' => array(
+			'file' => 'WalleeCore.ocmod.xml',
+			'default_status' => 1 
+		),
+		'WalleeAlerts' => array(
+			'file' => 'WalleeAlerts.ocmod.xml',
+			'default_status' => 1 
+		),
+		'WalleeQuickCheckoutCompatibility' => array(
+			'file' => 'WalleeQuickCheckoutCompatibility.ocmod.xml',
+			'default_status' => 0 
+		),
+		'WalleePreventConfirmationEmail' => array(
+			'file' => 'WalleePreventConfirmationEmail.ocmod.xml',
+			'default_status' => 0 
+		),
+		'WalleeFrontendPdf' => array(
+			'file' => 'WalleeFrontendPdf.ocmod.xml',
+			'default_status' => 1 
+		) 
 	);
 
 	public function install(){
 		$path = DIR_SYSTEM . "library/wallee/modification/";
-		foreach (self::$modifications as $code => $file) {
-			$this->importModification($path . $file);
+		foreach (self::$modifications as $code => $modification) {
+			$this->importModification($path . $modification['file'], $modification['default_status']);
 		}
 	}
 
 	public function uninstall(){
-		foreach (self::$modifications as $code => $file) {
+		foreach (self::$modifications as $code => $modification) {
 			$modification_info = $this->getModificationModel()->getModificationByCode($code);
 			
 			if ($modification_info) {
@@ -31,7 +43,7 @@ class ModelExtensionWalleeModification extends AbstractModel {
 		}
 	}
 
-	private function importModification($file){
+	private function importModification($file, $status){
 		$currentVersion = '0.0.0';
 		$xml = file_get_contents($file);
 		
@@ -98,7 +110,7 @@ class ModelExtensionWalleeModification extends AbstractModel {
 				'version' => $version,
 				'link' => $link,
 				'xml' => $xml,
-				'status' => 1,
+				'status' => $status,
 				'extension_install_id' => null 
 			);
 			

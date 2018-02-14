@@ -140,6 +140,7 @@ class Transaction extends AbstractService {
 			$create_transaction->setDeviceSessionIdentifier($this->registry->get('request')->cookie['wallee_device_id']);
 		}
 		
+		$create_transaction->setAutoConfirmationEnabled(false);
 		$this->assembleTransaction($create_transaction, $order_info);
 		$transaction = $this->getTransactionService()->create($this->registry->get('config')->get('wallee_space_id'), $create_transaction);
 		
@@ -174,9 +175,8 @@ class Transaction extends AbstractService {
 		if (isset($data['shipping_method'])) {
 			$transaction->setShippingMethod($this->fixLength($data['shipping_method']['title'], 200));
 		}
-		
+
 		$transaction->setLineItems(LineItem::instance($this->registry)->getItemsFromSession());
-		
 		$transaction->setSuccessUrl(\WalleeHelper::instance($this->registry)->getSuccessUrl());
 		
 		if ($order_id) {

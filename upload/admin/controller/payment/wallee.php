@@ -207,8 +207,6 @@ class ControllerPaymentWallee extends AbstractController {
 		$data['description_administration'] = $this->language->get("description_administration");
 		$data['entry_pdf'] = $this->language->get("entry_pdf");
 		$data['description_pdf'] = $this->language->get("description_pdf");
-		$data['entry_logging'] = $this->language->get("entry_logging");
-		$data['description_logging'] = $this->language->get("description_logging");
 		$data['entry_checkout'] = $this->language->get("entry_checkout");
 		$data['description_checkout'] = $this->language->get("description_checkout");
 		$data['entry_events'] = $this->language->get("entry_events");

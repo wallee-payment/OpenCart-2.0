@@ -3,7 +3,7 @@
 namespace Wallee\Service;
 
 /**
- * This service provides functions to deal with Wallee refunds.
+ * This service provides functions to deal with Wallee voids.
  */
 class VoidJob extends AbstractJob {
 

@@ -18,10 +18,8 @@ class ControllerExtensionWalleeEvent extends Wallee\Controller\AbstractEvent {
 		$script = \WalleeHelper::instance($this->registry)->getBaseUrl();
 		$script .= '/s/[spaceId]/payment/device.js?sessionIdentifier=[UniqueSessionIdentifier]';
 		
-		if (!isset($this->request->cookie['wallee_device_id'])) {
-			$this->request->cookie['wallee_device_id'] = \WalleeHelper::generateUuid();
-		}
-		
+		$this->setDeviceCookie();
+
 		$script = str_replace(array(
 			'[spaceId]',
 			'[UniqueSessionIdentifier]' 
@@ -34,6 +32,16 @@ class ControllerExtensionWalleeEvent extends Wallee\Controller\AbstractEvent {
 		$script .= '" async="async';
 		
 		$this->document->addScript($script);
+	}
+
+	private function setDeviceCookie(){
+		if (isset($this->request->cookie['wallee_device_id'])) {
+			$value = $this->request->cookie['wallee_device_id'];
+		}
+		else {
+			$this->request->cookie['wallee_device_id'] = $value = \WalleeHelper::generateUuid();
+		}
+		setcookie('wallee_device_id', $value, time() + 365 * 24 * 60 * 60, '/');
 	}
 
 	/**

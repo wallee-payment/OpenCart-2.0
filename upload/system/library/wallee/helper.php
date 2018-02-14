@@ -366,8 +366,6 @@ class WalleeHelper {
 		return $prefixWithDash . $postfix;
 	}
 
-
-
 	/**
 	 *
 	 * @return Wallee\Sdk\ApiClient
@@ -519,6 +517,15 @@ class WalleeHelper {
 		return "https://app-wallee.com:443";
 	}
 
+	public static function isEditableState($state){
+		$completable_states = array(
+			\Wallee\Sdk\Model\TransactionState::AUTHORIZED,
+			\Wallee\Sdk\Model\TransactionState::CONFIRMED,
+			\Wallee\Sdk\Model\TransactionState::PROCESSING 
+		);
+		return in_array($state, $completable_states);
+	}
+
 	public static function createUrl(Url $url_provider, $route, $query, $ssl){
 		if (is_array($query)) {
 			$query = http_build_query($query);
@@ -528,16 +535,7 @@ class WalleeHelper {
 		}
 		return $url_provider->link($route, $query, $ssl);
 	}
-	
-	public static function isEditableState($state){
-		$completable_states = array(
-			\Wallee\Sdk\Model\TransactionState::AUTHORIZED,
-			\Wallee\Sdk\Model\TransactionState::CONFIRMED,
-			\Wallee\Sdk\Model\TransactionState::PROCESSING
-		);
-		return in_array($state, $completable_states);
-	}
-	
+
 	public static function generateToken($tokenLength = 10){
 		$token = '';
 		static $characters;
