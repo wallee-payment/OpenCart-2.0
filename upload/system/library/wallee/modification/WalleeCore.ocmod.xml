@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<code>WalleeCore</code>
+	<name>wallee core: load payment methods.
+	</name>
+	<version>1.0.0</version>
+	<author>Customweb GmbH</author>
+	<link>http://github.com/wallee-payment/opencart</link>
+	<file path="catalog/controller/checkout/checkout.php">
+		<operation>
+			<search><![CDATA[
+		if (isset($this->session->data['error'])) {
+            ]]></search>
+			<add position="before"><![CDATA[
+		if (isset($this->request->get['order_id'])) {
+			require_once modification(DIR_SYSTEM . 'library/wallee/helper.php');
+			$transaction_info = \Wallee\Entity\TransactionInfo::loadByOrderId($this->registry, $this->request->get['order_id']);
+			if ($transaction_info->getId() != null) {
+				$data['error_warning'] = $transaction_info->getFailureReason();
+			}
+		} else 
+            ]]></add>
+		</operation>
+	</file>
+	<file path="admin/controller/extension/payment.php">
+		<operation>
+			<search><![CDATA[
+       				$this->model_extension_extension->uninstall('payment', $value);
+            ]]></search>
+			<add position="replace" offset="2"><![CDATA[
+		            if (strpos($value, 'wallee_') === false) {
+		            	$this->model_extension_extension->uninstall('payment', $value);
+		            }
+            ]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+       				unset($extensions[$key]);
+            ]]></search>
+			<add position="replace" offset="2"><![CDATA[
+		            if (strpos($value, 'wallee_') === false) {
+		            	unset($extensions[$key]);
+		            }
+            ]]></add>
+		</operation>
+	</file>
+	<file path="admin/controller/error/permission.php">
+		<operation>
+			<search><![CDATA[
+				$ignore = array(
+            ]]></search>
+			<add position="after"><![CDATA[
+					'extension/wallee',
+            ]]></add>
+		</operation>
+	</file>
+	<!-- order info -->
+	<file path="system/library/language.php">
+		<operation>
+			<search><![CDATA[
+				is_file($file)
+            ]]></search>
+			<add position="replace"><![CDATA[
+				is_file(modification($file))
+            ]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+				require($file)
+            ]]></search>
+			<add position="replace"><![CDATA[
+				require(modification($file))
+            ]]></add>
+		</operation>
+	</file>
+	<file path="admin/controller/sale/order.php">
+		<operation>
+			<search><![CDATA[
+				if (is_file(DIR_CATALOG . 'controller/payment/' . $order_info['payment_code'] . '.php')) {
+            ]]></search>
+			<add position="replace"><![CDATA[
+				if (is_file(DIR_CATALOG . 'controller/payment/' . $order_info['payment_code'] . '.php') || strpos($order_info['payment_code'], 'wallee_') === 0) {
+            ]]></add>
+		</operation>
+	</file>
+	
+	<file path="system/engine/action.php">
+		<operation>
+			<search><![CDATA[
+	is_file($file)
+            ]]></search>
+			<add position="replace"><![CDATA[
+	is_file(modification($file))
+            ]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+	is_file($this->file)
+            ]]></search>
+			<add position="replace"><![CDATA[
+	is_file(modification($this->file))
+            ]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+	include_once($file)
+            ]]></search>
+			<add position="replace"><![CDATA[
+	include_once(modification($file))
+            ]]></add>
+		</operation>
+	</file>
+	<file path="system/engine/loader.php">
+		<operation>
+			<search><![CDATA[
+	is_file($file)
+            ]]></search>
+			<add position="replace"><![CDATA[
+	is_file(modification($file))
+            ]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+	file_exists($file)
+            ]]></search>
+			<add position="replace"><![CDATA[
+	file_exists(modification($file))
+            ]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+	require($file)
+            ]]></search>
+			<add position="replace"><![CDATA[
+	require(modification($file))
+            ]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+	include_once($file)
+            ]]></search>
+			<add position="replace"><![CDATA[
+	include_once(modification($file))
+            ]]></add>
+		</operation>
+	</file>
+</modification>
