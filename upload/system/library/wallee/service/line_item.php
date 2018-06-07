@@ -200,7 +200,12 @@ class LineItem extends AbstractService {
 		$expected_total = 0;
 		// attempt to add 3rd party totals
 		foreach ($this->total as $total) {
-			if (!in_array($total['code'], array(
+		    
+		    if(strncmp($total['code'], 'xfee', strlen('xfee')) === 0){
+		        $items[] = $item = $this->createXFeeLineItem($total);
+		        $calculated_total += $item->getAmountIncludingTax();
+		    }
+		    else if (!in_array($total['code'], array(
 				'total',
 				'shipping',
 				'sub_total',
@@ -282,6 +287,26 @@ class LineItem extends AbstractService {
 		$line_item->setAmountIncludingTax(\WalleeHelper::instance($this->registry)->formatAmount($total['value']));
 		
 		return $this->cleanLineItem($line_item);
+	}
+	
+	private function createXFeeLineItem($total){
+	    $config = $this->registry->get('config');
+	    $line_item = new LineItemCreate();
+	    $line_item->setName($total['title']);
+	    $line_item->setSku($total['code']);
+	    $line_item->setUniqueId($total['code']);
+	    $line_item->setQuantity(1);
+	    $line_item->setType(LineItemType::FEE);
+	    if($total['value'] < 0){
+	        $line_item->setType(LineItemType::DISCOUNT);
+	    }	    
+	    $line_item->setAmountIncludingTax(\WalleeHelper::instance($this->registry)->formatAmount($total['value']));
+	    $fee_id = substr($total['code'], 4);
+	    if ($config->get ( 'xfee_tax_class_id' . $fee_id )) {
+	        $tax_amount = $this->addTaxesToLineItem($line_item, $total['value'], $config->get( 'xfee_tax_class_id' . $fee_id ));
+	        $line_item->setAmountIncludingTax(\WalleeHelper::instance($this->registry)->formatAmount($total['value'] + $tax_amount));
+	    }
+	    return $this->cleanLineItem($line_item);
 	}
 
 	private function createLineItemFromProduct($product){
