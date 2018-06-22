@@ -27,9 +27,9 @@ class ControllerPaymentWallee extends AbstractController {
 	 * @param bool $purge Set to false to skip purgin database.
 	 * @return void
 	 */
-	public function uninstall(){
+	public function uninstall($purge = true){
 		$this->load->model("extension/wallee/setup");
-		$this->model_extension_wallee_setup->uninstall(true);
+		$this->model_extension_wallee_setup->uninstall($purge);
 	}
 
 	/**
@@ -41,6 +41,7 @@ class ControllerPaymentWallee extends AbstractController {
 		$this->load->model("setting/setting");
 		$this->load->model("setting/store");
 		$this->load->model("localisation/order_status");
+		$this->load->model("extension/wallee/setup");
 		
 		\WalleeHelper::instance($this->registry);
 		
@@ -71,66 +72,113 @@ class ControllerPaymentWallee extends AbstractController {
 		}
 	}
 
+	private function validateGlobalSettings(array $global){
+		if (!isset($global['wallee_application_key']) || empty($global['wallee_application_key'])) {
+			throw new Exception($this->language->get('error_application_key_unset'));
+		}
+		if (isset($global['wallee_user_id']) && !empty($global['wallee_user_id'])) {
+			if (!ctype_digit($global['wallee_user_id'])) {
+				throw new Exception($this->language->get('error_user_id_numeric'));
+			}
+		}
+		else {
+			throw new Exception($this->language->get('error_user_id_unset'));
+		}
+	}
+
+	private function validateStoreSettings(array $store){
+		if (isset($store['wallee_space_id']) && !empty($store['wallee_space_id'])) {
+			if (!ctype_digit($store['wallee_space_id'])) {
+				throw new Exception($this->language->get('error_space_id_numeric'));
+			}
+		}
+		else {
+			throw new Exception($this->language->get('error_space_id_unset'));
+		}
+		if (isset($store['wallee_space_view_id']) && !empty($store['wallee_space_view_id'])) {
+			if (!ctype_digit($store['wallee_space_view_id'])) {
+				throw new Exception($this->language->get('error_space_view_id_numeric'));
+			}
+		}
+	}
+
+	private function persistStoreSettings(array $global, array $store){
+		$newSettings = array_merge($global, $store);
+		
+		// preserve migration state
+		$newSettings['wallee_migration_version'] = $this->config->get('wallee_migration_version');
+		$newSettings['wallee_migration_name'] = $this->config->get('wallee_migration_name');
+		// preserve manual tasks
+		$newSettings[\Wallee\Service\ManualTask::CONFIG_KEY] = WalleeVersionHelper::getPersistableSetting(
+				$this->model_setting_setting->getSetting(\Wallee\Service\ManualTask::CONFIG_KEY, $store['id']), 0);
+		// preserve notification url
+		$newSettings['wallee_notification_url'] = WalleeVersionHelper::getPersistableSetting(
+				$this->model_setting_setting->getSetting('wallee_notification_url', $store['id']), null);
+		
+		// set directly accessible settings required for synchronization, reload according to new settings
+		if ($store['wallee_status']) {
+			$this->config->set('wallee_application_key', $global['wallee_application_key']);
+			$this->config->set('wallee_user_id', $global['wallee_user_id']);
+			$this->synchronize($store['wallee_space_id']);
+		}
+		
+		$newSettings['wallee_download_invoice'] = isset($store['wallee_download_invoice']);
+		$newSettings['wallee_download_packaging'] = isset($store['wallee_download_packaging']);
+		
+		WalleeVersionHelper::persistPluginStatus($this->registry, $newSettings);
+		
+		$this->model_setting_setting->editSetting('wallee', $newSettings, $store['id']);
+		
+		return true;
+	}
+
 	/**
 	 * Processes post data to settings.
 	 *
 	 * @param array $shops
 	 */
 	private function processPostData($shops){
-		$changed = false;
-		$reinstall = false;
-		$this->load->model('setting/setting');
-		$this->load->model("extension/wallee/setup");
+		if ($this->request->server['REQUEST_METHOD'] !== "POST") {
+			return;
+		}
+		
+		try {
+			$this->validateGlobalSettings($this->request->post);
+		}
+		catch (Exception $e) {
+			$this->error['warning'] = $e->getMessage();
+			return;
+		}
+		
+		$this->model_extension_wallee_setup->uninstall(false);
+		
 		foreach ($shops as $store) {
-			// Call validate method on POST
-			if (($this->request->server['REQUEST_METHOD'] == "POST") && ($this->validateStore($store['id']))) {
-				if (!$changed) {
-					$this->model_extension_wallee_setup->uninstall(false);
+			$storeSettings = $this->request->post['stores'][$store['id']];
+			$storeSettings['id'] = $store['id'];
+			if ($this->validateStore($store['id'])) {
+				if (isset($storeSettings['wallee_status']) && $storeSettings['wallee_status']) {
+					try {
+						$this->validateStoreSettings($storeSettings);
+					}
+					catch (Exception $e) {
+						$this->error['warning'] = $e->getMessage();
+						continue;
+					}
 				}
-				$post = $this->request->post['stores'][$store['id']];
-				
-				// global settings
-				$post['wallee_migration_version'] = $this->config->get('wallee_migration_version');
-				$post['wallee_migration_name'] = $this->config->get('wallee_migration_name');
-				$post['wallee_application_key'] = $this->request->post['wallee_application_key'];
-				$post['wallee_user_id'] = $this->request->post['wallee_user_id'];
-				
-				// preserve manual tasks
-				$post[\Wallee\Service\ManualTask::CONFIG_KEY] = WalleeVersionHelper::getPersistableSetting($this->model_setting_setting->getSetting(\Wallee\Service\ManualTask::CONFIG_KEY, $store['id']), 0);
-				
-				// preserve notification url
-				$post['wallee_notification_url'] = WalleeVersionHelper::getPersistableSetting($this->model_setting_setting->getSetting('wallee_notification_url', $store['id']), null);
-				
-				// reload according to new settings
-				if (isset($post['wallee_space_id']) && isset($post['wallee_status']) && $post['wallee_status']) {
-					$this->config->set('wallee_application_key', $this->request->post['wallee_application_key']);
-					$this->config->set('wallee_user_id', $this->request->post['wallee_user_id']);
-					$this->synchronize($post['wallee_space_id']);
-					$reinstall = true;
-				}
-				
-				$post['wallee_download_invoice'] = isset($post['wallee_download_invoice']);
-				$post['wallee_download_packaging'] = isset($post['wallee_download_packaging']);
-				
-				WalleeVersionHelper::persistPluginStatus($this->registry, $post);
-				
-				$this->model_setting_setting->editSetting('wallee', $post, $store['id']);
-				$changed = true;
+				$this->persistStoreSettings($this->request->post, $storeSettings);
 			}
 		}
-		if ($changed) {
-			if($reinstall){
-				$this->install();
-			}
+		
+		$this->install();
+		
+		if (!isset($this->error['warning'])) {
 			$this->session->data['success'] = $this->language->get("message_saved_settings");
 			
-			if (!isset($this->error['warning'])) {
-				$this->response->redirect(
-						$this->createUrl("extension/payment",
-								array(
-									\WalleeVersionHelper::TOKEN => $this->session->data[\WalleeVersionHelper::TOKEN] 
-								)));
-			}
+			$this->response->redirect(
+					$this->createUrl("extension/payment",
+							array(
+								\WalleeVersionHelper::TOKEN => $this->session->data[\WalleeVersionHelper::TOKEN] 
+							)));
 		}
 	}
 
@@ -146,12 +194,14 @@ class ControllerPaymentWallee extends AbstractController {
 		$data['shops'] = $shops;
 		
 		// Form action url
-		$data['action'] = $this->createUrl("payment/wallee", array(
-			\WalleeVersionHelper::TOKEN => $this->session->data[\WalleeVersionHelper::TOKEN] 
-		));
-		$data['cancel'] = $this->createUrl("extension/payment", array(
-			\WalleeVersionHelper::TOKEN => $this->session->data[\WalleeVersionHelper::TOKEN] 
-		));
+		$data['action'] = $this->createUrl("payment/wallee",
+				array(
+					\WalleeVersionHelper::TOKEN => $this->session->data[\WalleeVersionHelper::TOKEN] 
+				));
+		$data['cancel'] = $this->createUrl("extension/payment",
+				array(
+					\WalleeVersionHelper::TOKEN => $this->session->data[\WalleeVersionHelper::TOKEN] 
+				));
 		
 		return array_merge($this->getSettingsPageTranslatedVariables(), $data, $this->getAlertTemplateVariables(), $this->getSettingsPageBreadcrumbs(),
 				$this->getSettingPageStoreVariables($shops), $this->getAdminSurroundingTemplates());

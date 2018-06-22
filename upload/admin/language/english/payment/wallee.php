@@ -6,9 +6,9 @@
  */
 // @formatter:off
 $_['heading_title']									= 'wallee';
-$_['heading_wallee']									= 'wallee';
+$_['heading_wallee']					= 'wallee';
 $_['text_wallee']					= '<a target="_BLANK" href="https://www.wallee.com"><img src="view/image/payment/wallee.png" alt="wallee Website" title="wallee Website" style="border: 1px solid #EEEEEE;" /></a>';
-// Walle Configurations (user id, application key, spaces)
+// Wallee Configurations (user id, application key, spaces)
 $_['title_global_settings']							= "Global credentials";
 $_['title_store_settings']							= "Store settings";
 $_['entry_user_id']									= "User Id";
@@ -85,6 +85,14 @@ $_['text_disabled']									= "Disabled";
 $_['entry_status']									= "Status";
 
 $_['message_saved_settings']						= "The settings have been saved successfully. Don't forget to refresh the modifications!";
+
+// errors
+$_['error_application_key_unset']					= "Application key must not be empty.";
+$_['error_space_id_unset']							= "Space ID must not be empty.";
+$_['error_space_id_numeric']						= "Space ID must be numeric.";
+$_['error_space_view_id_numeric']					= "Space view ID must be numeric.";
+$_['error_user_id_unset']							= "User ID must not be empty.";
+$_['error_user_id_numeric']							= "User ID must be numeric.";
 
 /**
  * ===========================================================================================
