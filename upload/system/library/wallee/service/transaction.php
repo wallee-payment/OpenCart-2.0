@@ -18,9 +18,7 @@ class Transaction extends AbstractService {
 	public function getPaymentMethods(array $order_info){
 		$cart_id = \WalleeVersionHelper::getCurrentCartId($this->registry);
 		if (!$cart_id || !isset(self::$possible_payment_method_cache[$cart_id])) {
-			$transaction = $this->getTransaction($order_info, true, array(
-				\Wallee\Sdk\Model\TransactionState::PENDING 
-			));
+			$transaction = $this->update($order_info, false);
 			$payment_methods = $this->getTransactionService()->fetchPossiblePaymentMethods($transaction->getLinkedSpaceId(), $transaction->getId());
 			
 			foreach ($payment_methods as $payment_method) {
