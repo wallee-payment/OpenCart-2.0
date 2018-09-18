@@ -33,21 +33,9 @@ abstract class ControllerExtensionPaymentWalleeBase extends AbstractController {
 			'status' => false 
 		);
 		try {
-			$service = \Wallee\Service\Transaction::instance($this->registry);
-			
-			$transaction = $service->getTransaction(array(), false, array(
-				\Wallee\Sdk\Model\TransactionState::PENDING 
-			));
-			if ($transaction->getState() === \Wallee\Sdk\Model\TransactionState::PENDING) {
-				\WalleeHelper::instance($this->registry)->dbTransactionStart();
-				\WalleeHelper::instance($this->registry)->dbTransactionLock($transaction->getLinkedSpaceId(), $transaction->getId());
-				$service->update($this->session->data, true);
-				\WalleeHelper::instance($this->registry)->dbTransactionCommit();
-				$result['status'] = true;
-			}
-			else {
-				throw new Exception('Transaction is not pending.');
-			}
+			$transaction = $this->confirmTransaction();
+			$result['status'] = true;
+			$result['redirect'] = Wallee\Service\Transaction::instance($this->registry)->getPaymentPageUrl($transaction, $this->getCode());
 		}
 		catch (Exception $e) {
 			\WalleeHelper::instance($this->registry)->dbTransactionRollback();
@@ -56,6 +44,21 @@ abstract class ControllerExtensionPaymentWalleeBase extends AbstractController {
 		
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($result));
+	}
+
+	private function confirmTransaction(){
+		$transaction = Wallee\Service\Transaction::instance($this->registry)->getTransaction(array(), false,
+				array(
+					\Wallee\Sdk\Model\TransactionState::PENDING 
+				));
+		if ($transaction->getState() == \Wallee\Sdk\Model\TransactionState::PENDING) {
+			\WalleeHelper::instance($this->registry)->dbTransactionStart();
+			\WalleeHelper::instance($this->registry)->dbTransactionLock($transaction->getLinkedSpaceId(), $transaction->getId());
+			Wallee\Service\Transaction::instance($this->registry)->update($this->session->data, true);
+			\WalleeHelper::instance($this->registry)->dbTransactionCommit();
+			return $transaction;
+		}
+		throw new Exception('Transaction is not pending.');
 	}
 
 	protected function getRequiredPermission(){

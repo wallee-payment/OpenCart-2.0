@@ -125,19 +125,6 @@
 											id="stores[<?php echo $store['id']; ?>][wallee_space_id]" class="form-control" />
 									</div>
 								</div>
-
-								<div class="form-group">
-									<label class="col-sm-2 control-label"
-										for="stores[<?php echo $store['id']; ?>][wallee_space_view_id]"><span data-toggle="tooltip"
-										title="<?php echo htmlspecialchars($help_space_view_id) ?>"><?php echo htmlspecialchars($entry_space_view_id) ?></span></label>
-
-									<div class="col-sm-10">
-										<input type="text"
-											name="stores[<?php echo $store['id']; ?>][wallee_space_view_id]"
-											value="<?php echo htmlspecialchars($stores[$store['id']]['wallee_space_view_id']) ?>"
-											id="stores[<?php echo $store['id']; ?>][wallee_space_view_id]" class="form-control" />
-									</div>
-								</div>
 							</fieldset>
 
 							<fieldset>
@@ -219,6 +206,21 @@
 											><?php echo $name; ?></option>
 										<?php endforeach; ?>
 										</select>
+									</div>
+								</div>
+							</fieldset>
+							<fieldset>
+								<legend><?php echo htmlspecialchars($title_space_view_id) ?></legend>
+								<div class="form-group">
+									<label class="col-sm-2 control-label"
+										for="stores[<?php echo $store['id']; ?>][wallee_space_view_id]"><span data-toggle="tooltip"
+										title="<?php echo htmlspecialchars($help_space_view_id) ?>"><?php echo htmlspecialchars($entry_space_view_id) ?></span></label>
+
+									<div class="col-sm-10">
+										<input type="text"
+											name="stores[<?php echo $store['id']; ?>][wallee_space_view_id]"
+											value="<?php echo htmlspecialchars($stores[$store['id']]['wallee_space_view_id']) ?>"
+											id="stores[<?php echo $store['id']; ?>][wallee_space_view_id]" class="form-control" />
 									</div>
 								</div>
 							</fieldset>
