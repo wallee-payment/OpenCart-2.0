@@ -3,7 +3,7 @@
 	<code>WalleeQuickCheckoutCompatibility</code>
 	<name>wallee compatibility: patch for Ajax Quick Checkout.
 	</name>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<author>Customweb GmbH</author>
 	<link>http://github.com/wallee-payment/opencart</link>
 	<file path="catalog/model/extension/d_quickcheckout/method.php">

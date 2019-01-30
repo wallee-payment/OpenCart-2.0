@@ -71,12 +71,14 @@ class Transaction extends AbstractOrderRelated {
 	}
 
 	protected function processing(\Wallee\Sdk\Model\Transaction $transaction, array $order_info){
+		// TODO none..
 		\WalleeHelper::instance($this->registry)->addOrderHistory($order_info['order_id'], 'wallee_processing_status_id',
 				\WalleeHelper::instance($this->registry)->getTranslation('message_webhook_processing'));
 	}
 
 	protected function confirm(\Wallee\Sdk\Model\Transaction $transaction, array $order_info){
-		\WalleeHelper::instance($this->registry)->addOrderHistory($order_info['order_id'], 'wallee_confirmed_status_id',
+		// TODO none..
+		\WalleeHelper::instance($this->registry)->addOrderHistory($order_info['order_id'], 'wallee_processing_status_id',
 				\WalleeHelper::instance($this->registry)->getTranslation('message_webhook_confirm'));
 	}
 
@@ -96,6 +98,7 @@ class Transaction extends AbstractOrderRelated {
 	}
 
 	protected function failed(\Wallee\Sdk\Model\Transaction $transaction, array $order_info){
+		// TODO none
 		\WalleeHelper::instance($this->registry)->addOrderHistory($order_info['order_id'], 'wallee_failed_status_id',
 				\WalleeHelper::instance($this->registry)->getTranslation('message_webhook_failed'));
 	}

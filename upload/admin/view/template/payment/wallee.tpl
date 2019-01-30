@@ -157,6 +157,7 @@
 
 							<fieldset>
 								<legend><?php echo htmlspecialchars($title_payment_status) ?></legend>
+								<p class="alert alert-info"><?php echo htmlspecialchars($description_none_status) ?></p>
 								
 								<?php foreach ($wallee_statuses as $status): ?>
 								

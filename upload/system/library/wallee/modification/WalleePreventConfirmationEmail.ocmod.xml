@@ -2,7 +2,7 @@
 <modification>
 	<code>WalleePreventConfirmationEmail</code>
 	<name>wallee email: prevent confirmation email.</name>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<author>Customweb GmbH</author>
 	<link>http://github.com/wallee-payment/opencart</link>
 	<file path="catalog/model/checkout/order.php">

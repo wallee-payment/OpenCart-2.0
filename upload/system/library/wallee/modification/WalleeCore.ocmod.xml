@@ -3,7 +3,7 @@
 	<code>WalleeCore</code>
 	<name>wallee core: load payment methods.
 	</name>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<author>Customweb GmbH</author>
 	<link>http://github.com/wallee-payment/opencart</link>
 	<file path="catalog/controller/checkout/checkout.php">
@@ -12,12 +12,11 @@
 		if (isset($this->session->data['error'])) {
             ]]></search>
 			<add position="before"><![CDATA[
-		if (isset($this->request->get['order_id'])) {
-			require_once modification(DIR_SYSTEM . 'library/wallee/helper.php');
+		require_once modification(DIR_SYSTEM . 'library/wallee/helper.php');
+		if (isset($this->request->get['order_id']) && \WalleeHelper::instance($this->registry)->isValidOrder($this->request->get['order_id'])
+			&& \Wallee\Service\Transaction::instance($this->registry)->waitForStates($this->request->get['order_id'], array(\Wallee\Sdk\Model\TransactionState::FAILED), 5)) {
 			$transaction_info = \Wallee\Entity\TransactionInfo::loadByOrderId($this->registry, $this->request->get['order_id']);
-			if ($transaction_info->getId() != null) {
-				$data['error_warning'] = $transaction_info->getFailureReason();
-			}
+			$data['error_warning'] = $transaction_info->getFailureReason();
 		} else 
             ]]></add>
 		</operation>
@@ -62,6 +61,14 @@
             ]]></search>
 			<add position="replace"><![CDATA[
 				is_file(modification($file))
+            ]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+				file_exists($file)
+            ]]></search>
+			<add position="replace"><![CDATA[
+				file_exists(modification($file))
             ]]></add>
 		</operation>
 		<operation>

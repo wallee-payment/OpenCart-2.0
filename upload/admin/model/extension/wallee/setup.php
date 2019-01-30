@@ -72,6 +72,7 @@ class ModelExtensionWalleeSetup extends AbstractModel {
 		$this->model_user_user_group->addPermission($this->user->getGroupId(), 'access', 'extension/wallee/update');
 		$this->model_user_user_group->addPermission($this->user->getGroupId(), 'access', 'extension/wallee/pdf');
 		$this->model_user_user_group->addPermission($this->user->getGroupId(), 'access', 'extension/wallee/alert');
+		$this->model_user_user_group->addPermission($this->user->getGroupId(), 'access', 'extension/wallee/transaction');
 	}
 
 	private function removePermissions(){
@@ -83,5 +84,6 @@ class ModelExtensionWalleeSetup extends AbstractModel {
 		$this->model_user_user_group->removePermission($this->user->getGroupId(), 'access', 'extension/wallee/update');
 		$this->model_user_user_group->removePermission($this->user->getGroupId(), 'access', 'extension/wallee/pdf');
 		$this->model_user_user_group->removePermission($this->user->getGroupId(), 'access', 'extension/wallee/alert');
+		$this->model_user_user_group->removePermission($this->user->getGroupId(), 'access', 'extension/wallee/transaction');
 	}
 }

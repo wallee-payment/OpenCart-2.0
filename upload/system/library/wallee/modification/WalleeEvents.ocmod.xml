@@ -3,7 +3,7 @@
 	<code>WalleeEvents</code>
 	<name>wallee events: handle events unavailable in Opencart 2.0.x and 2.1.x.
 	</name>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<author>Customweb GmbH</author>
 	<link>http://github.com/wallee-payment/opencart</link>
 	<file path="catalog/controller/common/header.php">

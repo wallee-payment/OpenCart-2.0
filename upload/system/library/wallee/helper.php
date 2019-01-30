@@ -499,6 +499,28 @@ class WalleeHelper {
 	public function isAdmin(){
 		return defined('HTTPS_CATALOG') && defined('HTTP_CATALOG');
 	}
+	
+	/**
+	 * Get the starting value of LIMIT for db queries. Used for paginated requests.
+	 * 
+	 * @param int $page
+	 * @return int
+	 */
+	public function getLimitStart($page) {
+		$limit = $this->registry->get('config')->get('config_limit_admin');
+		return ($page - 1) * $limit;
+	}
+	
+	/**
+	 * Get the end value of LIMIT for db queries. Used for paginated requests.
+	 *
+	 * @param int $page
+	 * @return int
+	 */
+	public function getLimitEnd($page) {
+		$limit = $this->registry->get('config')->get('config_limit_admin');
+		return $page * $limit;
+	}
 
 	public static function instance(Registry $registry){
 		if (self::$instance === null) {

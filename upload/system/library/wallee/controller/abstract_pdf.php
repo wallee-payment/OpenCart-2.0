@@ -21,7 +21,7 @@ abstract class AbstractPdf extends AbstractController {
 					\Wallee\Sdk\Model\TransactionState::FULFILL,
 					\Wallee\Sdk\Model\TransactionState::DECLINE 
 				))) {
-			$service = new \Wallee\Sdk\Service\TransactionService(\WalleeHelper::instance($this->registry)->getApiClient());
+					$service = new \Wallee\Sdk\Service\TransactionService(\WalleeHelper::instance($this->registry)->getApiClient());
 			$document = $service->getInvoiceDocument($transaction_info->getSpaceId(), $transaction_info->getTransactionId());
 			$this->download($document);
 		}

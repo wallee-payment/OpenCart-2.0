@@ -3,7 +3,7 @@
 	<code>WalleeAdministration</code>
 	<name>wallee administration: complete, refund and void from the OpenCart backend.
 	</name>
-	<version>1.0.0</version>
+	<version>1.0.2</version>
 	<author>Customweb GmbH</author>
 	<link>http://github.com/wallee-payment/opencart</link>
 	<file path="admin/controller/sale/order.php">

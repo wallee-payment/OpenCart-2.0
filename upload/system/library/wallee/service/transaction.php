@@ -20,14 +20,14 @@ class Transaction extends AbstractService {
 		$cart_id = \WalleeVersionHelper::getCurrentCartId($this->registry);
 		if (!$cart_id || !array_key_exists($cart_id, self::$possible_payment_method_cache)) {
 			$transaction = $this->update($order_info, false);
-			try{
+			try {
 				$payment_methods = $this->getTransactionService()->fetchPossiblePaymentMethods($transaction->getLinkedSpaceId(), $transaction->getId());
 				foreach ($payment_methods as $payment_method) {
 					MethodConfiguration::instance($this->registry)->updateData($payment_method);
 				}
 				self::$possible_payment_method_cache[$cart_id] = $payment_methods;
 			}
-			catch(\Exception $e) {
+			catch (\Exception $e) {
 				self::$possible_payment_method_cache[$cart_id] = array();
 				throw $e;
 			}
@@ -86,6 +86,29 @@ class Transaction extends AbstractService {
 		}
 		
 		throw $last;
+	}
+
+	/**
+	 * Wait for the order to reach a given state.
+	 *
+	 * @param $order_id
+	 * @param array $states
+	 * @param int $maxWaitTime
+	 * @return boolean
+	 */
+	public function waitForStates($order_id, array $states, $maxWaitTime = 10){
+		$startTime = microtime(true);
+		while (true) {
+			$transactionInfo = \Wallee\Entity\TransactionInfo::loadByOrderId($this->registry, $order_id);
+			if (in_array($transactionInfo->getState(), $states)) {
+				return true;
+			}
+			
+			if (microtime(true) - $startTime >= $maxWaitTime) {
+				return false;
+			}
+			sleep(1);
+		}
 	}
 
 	/**

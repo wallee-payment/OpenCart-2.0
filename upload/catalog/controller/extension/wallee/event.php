@@ -96,6 +96,7 @@ class ControllerExtensionWalleeEvent extends Wallee\Controller\AbstractEvent {
 	public function update(){
 		try {
 			$this->validate();
+			$this->validateOrder();
 			
 			$transaction_info = \Wallee\Entity\TransactionInfo::loadByOrderId($this->registry, $this->request->get['order_id']);
 			
