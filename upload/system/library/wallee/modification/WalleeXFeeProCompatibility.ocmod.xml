@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<code>WalleeXFeeProCompatibility</code>
+	<name>wallee compatibility: patch for X-fee Pro.
+	</name>
+	<version>1.0.0</version>
+	<author>Customweb GmbH</author>
+	<link>http://github.com/wallee-payment/opencart</link>
+	<file path="catalog/model/total/xfeepro.php">
+		<operation>
+			<search><![CDATA[
+				strstr($payment_method,'xpayment') === false
+            ]]></search>
+			<add position="replace"><![CDATA[
+				strstr($payment_method,'xpayment') === false && strstr($payment_method,'wallee_') === false
+            ]]></add>
+		</operation>
+	</file>
+</modification>

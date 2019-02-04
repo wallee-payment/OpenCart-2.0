@@ -64,12 +64,12 @@
 	                	><?php echo $column_authorization_amount; ?></a>
 	                </td>
 	                <td class="text-right">
-	                    <a href="<?php echo $sort_created; ?>"
+	                    <a href="<?php echo $sort_created_at; ?>"
 	                	class="<?php if($filters['sort'] == 'created_at') { echo strtolower($filters['order']); } ?>"
 	                	><?php echo $column_created; ?></a>
 	                </td>
 	                <td class="text-right">
-	                    <a href="<?php echo $sort_updated; ?>"
+	                    <a href="<?php echo $sort_updated_at; ?>"
 	                	class="<?php if($filters['sort'] == 'updated_at') { echo strtolower($filters['order']); } ?>"
 	                	><?php echo $column_updated; ?></a>
 	                </td>
