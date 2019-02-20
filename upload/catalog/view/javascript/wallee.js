@@ -5,26 +5,27 @@
 		running : false,
 		initCalls : 0,
 		initMaxCalls : 10,
+		confirmationButtonSources: ['#button-confirm', '#journal-checkout-confirm-button'],
 
 		initialized : function() {
-			$('#button-confirm').removeAttr('disabled');
 			$('#wallee-iframe-spinner').hide();
 			$('#wallee-iframe-container').show();
+			Wallee.enableConfirmButton();
 			$('#button-confirm').click(function(event) {
 				Wallee.handler.validate();
-				$('#button-confirm').attr('disabled', 'disabled');
+				Wallee.disableConfirmButton();
 			});
 		},
 
 		fallback : function(methodConfigurationId) {
 			Wallee.methodConfigurationId = methodConfigurationId;
 			$('#button-confirm').click(Wallee.submit);
-			$('#button-confirm').removeAttr('disabled');
 			$('#wallee-iframe-spinner').toggle();
+			Wallee.enableConfirmButton();
 		},
 		
 		reenable: function() {
-			$('#button-confirm').removeAttr('disabled');
+			Wallee.enableConfirmButton();
 			if($('html').hasClass('quick-checkout-page')) { // modifications do not work for js
 				triggerLoadingOff();
 			}
@@ -63,6 +64,7 @@
 
 		init : function(methodConfigurationId) {
 			Wallee.initCalls++;
+			Wallee.disableConfirmButton();
 			if (typeof window.IframeCheckoutHandler === 'undefined') {
 				if (Wallee.initCalls < Wallee.initMaxCalls) {
 					setTimeout(function() {
@@ -81,6 +83,24 @@
 						.setValidationCallback(this.validated);
 				Wallee.handler
 						.create('wallee-iframe-container');
+			}
+		},
+		
+		enableConfirmButton : function() {
+			for(var i = 0; i < Wallee.confirmationButtonSources.length; i++) {
+				var button = $(Wallee.confirmationButtonSources[i]);
+				if(button.length) {
+					button.removeAttr('disabled');
+				}
+			}
+		},
+		
+		disableConfirmButton : function() {
+			for(var i = 0; i < Wallee.confirmationButtonSources.length; i++) {
+				var button = $(Wallee.confirmationButtonSources[i]);
+				if(button.length) {
+					button.attr('disabled', 'disabled');
+				}
 			}
 		}
 	}
