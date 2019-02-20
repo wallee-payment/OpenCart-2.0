@@ -18,20 +18,25 @@ class ModelExtensionWalleeAlert extends AbstractModel {
 
 	public function getAlerts(){
 		if ($this->alerts == null) {
-			$this->load->language('payment/wallee');
-			$this->alerts = array();
-			$alert_entities = \Wallee\Entity\Alert::loadAll($this->registry);
+			try {
+				$this->load->language('payment/wallee');
+				$this->alerts = array();
+				$alert_entities = \Wallee\Entity\Alert::loadAll($this->registry);
 			
-			foreach ($alert_entities as $alert_entity) {
-				$this->alerts[] = array(
-					'url' => $this->createUrl($alert_entity->getRoute(),
-							array(
-								\WalleeVersionHelper::TOKEN => $this->session->data[\WalleeVersionHelper::TOKEN] 
-							)),
-					'text' => $this->language->get($alert_entity->getKey()),
-					'level' => $alert_entity->getLevel(),
-					'count' => $alert_entity->getCount() 
-				);
+				foreach ($alert_entities as $alert_entity) {
+					$this->alerts[] = array(
+						'url' => $this->createUrl($alert_entity->getRoute(),
+								array(
+									\WalleeVersionHelper::TOKEN => $this->session->data[\WalleeVersionHelper::TOKEN] 
+								)),
+						'text' => $this->language->get($alert_entity->getKey()),
+						'level' => $alert_entity->getLevel(),
+						'count' => $alert_entity->getCount() 
+					);
+				}
+			}
+			catch(\Exception $e) {
+				// We ignore errors here otherwise we might not be albe to display the admin backend UI.
 			}
 		}
 		return $this->alerts;

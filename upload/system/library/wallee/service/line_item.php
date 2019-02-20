@@ -200,12 +200,12 @@ class LineItem extends AbstractService {
 		$expected_total = 0;
 		// attempt to add 3rd party totals
 		foreach ($this->total as $total) {
-		    
-		    if(strncmp($total['code'], 'xfee', strlen('xfee')) === 0){
-		        $items[] = $item = $this->createXFeeLineItem($total);
-		        $calculated_total += $item->getAmountIncludingTax();
-		    }
-		    else if (!in_array($total['code'], array(
+			
+			if (strncmp($total['code'], 'xfee', strlen('xfee')) === 0) {
+				$items[] = $item = $this->createXFeeLineItem($total);
+				$calculated_total += $item->getAmountIncludingTax();
+			}
+			else if (!in_array($total['code'], array(
 				'total',
 				'shipping',
 				'sub_total',
@@ -230,10 +230,11 @@ class LineItem extends AbstractService {
 		// 		only check amount if currency is base currency. Otherwise, rounding errors are expected to occur due to Opencart standard
 		if ($this->registry->get('currency')->getValue($currency_code) == 1) {
 			$expected_total = \WalleeHelper::instance($this->registry)->formatAmount($expected_total);
-		
+			
 			if (!\WalleeHelper::instance($this->registry)->areAmountsEqual($calculated_total, $expected_total, $currency_code)) {
 				\WalleeHelper::instance($this->registry)->log(
-						"Invalid order total calculated. Calculated total: $calculated_total, Expected total: $expected_total.", \WalleeHelper::LOG_ERROR);
+						"Invalid order total calculated. Calculated total: $calculated_total, Expected total: $expected_total.",
+						\WalleeHelper::LOG_ERROR);
 				\WalleeHelper::instance($this->registry)->log(array(
 					'Products' => $this->products 
 				), \WalleeHelper::LOG_ERROR);
@@ -255,7 +256,7 @@ class LineItem extends AbstractService {
 				\WalleeHelper::instance($this->registry)->log(array(
 					'wallee Items' => $items 
 				), \WalleeHelper::LOG_ERROR);
-			
+				
 				throw new \Exception("Invalid order total.");
 			}
 		}
@@ -288,25 +289,27 @@ class LineItem extends AbstractService {
 		
 		return $this->cleanLineItem($line_item);
 	}
-	
+
 	private function createXFeeLineItem($total){
-	    $config = $this->registry->get('config');
-	    $line_item = new LineItemCreate();
-	    $line_item->setName($total['title']);
-	    $line_item->setSku($total['code']);
-	    $line_item->setUniqueId($total['code']);
-	    $line_item->setQuantity(1);
-	    $line_item->setType(LineItemType::FEE);
-	    if($total['value'] < 0){
-	        $line_item->setType(LineItemType::DISCOUNT);
-	    }	    
-	    $line_item->setAmountIncludingTax(\WalleeHelper::instance($this->registry)->formatAmount($total['value']));
-	    $fee_id = substr($total['code'], 4);
-	    if ($config->get ( 'xfee_tax_class_id' . $fee_id )) {
-	        $tax_amount = $this->addTaxesToLineItem($line_item, $total['value'], $config->get( 'xfee_tax_class_id' . $fee_id ));
-	        $line_item->setAmountIncludingTax(\WalleeHelper::instance($this->registry)->formatAmount($total['value'] + $tax_amount));
-	    }
-	    return $this->cleanLineItem($line_item);
+		$config = $this->registry->get('config');
+		$line_item = new LineItemCreate();
+		$line_item->setName($total['title']);
+		$line_item->setSku($total['code']);
+		$line_item->setUniqueId($total['code']);
+		$line_item->setQuantity(1);
+		$line_item->setType(LineItemType::FEE);
+		if ($total['value'] < 0) {
+			$line_item->setType(LineItemType::DISCOUNT);
+		}
+		$line_item->setAmountIncludingTax(
+				\WalleeHelper::instance($this->registry)->formatAmount(
+						\WalleeHelper::instance($this->registry)->roundXfeeAmount($total['value'])));
+		$fee_id = substr($total['code'], 4);
+		if ($config->get('xfee_tax_class_id' . $fee_id)) {
+			$tax_amount = $this->addTaxesToLineItem($line_item, $total['value'], $config->get('xfee_tax_class_id' . $fee_id));
+			$line_item->setAmountIncludingTax(\WalleeHelper::instance($this->registry)->formatAmount($total['value'] + $tax_amount));
+		}
+		return $this->cleanLineItem($line_item);
 	}
 
 	private function createLineItemFromProduct($product){

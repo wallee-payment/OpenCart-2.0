@@ -26,7 +26,11 @@ class WalleeVersionHelper {
 			),
 			'WalleeQuickCheckoutCompatibility' => array(
 				'file' => 'WalleeQuickCheckoutCompatibility.ocmod.xml',
-				'default_status' => 0 
+				'default_status' => 0
+			),
+			'WalleeJournalCompatibility' => array(
+				'file' => 'WalleeJournalCompatibility.ocmod.xml',
+				'default_status' => 0
 			),
 			'WalleeXFeeProCompatibility' => array(
 				'file' => 'WalleeXFeeProCompatibility.ocmod.xml',
@@ -112,19 +116,6 @@ class WalleeVersionHelper {
 		}
 		
 		return $totals;
-	}
-
-	public static function getCurrentCartId(\Registry $registry){
-		$customer_id = (int) $registry->get('customer')->getId();
-		$table = DB_PREFIX . 'customer';
-		
-		$query = "SELECT cart FROM $table WHERE customer_id='$customer_id';";
-		$result = $registry->get('db')->query($query);
-		
-		if ($result->row) {
-			return md5($result->row['cart']);
-		}
-		return 0;
 	}
 	
 	public static function persistPluginStatus(\Registry $registry, array $post) {

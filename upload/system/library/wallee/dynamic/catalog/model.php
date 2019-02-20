@@ -32,6 +32,18 @@ abstract class ModelExtensionPaymentWalleeBase extends Model {
 		}
 		
 		try {
+			if (isset($this->session->data['order_id'])) {
+				$transaction = \Wallee\Entity\TransactionInfo::loadByOrderId($this->registry, $this->session->data['order_id']);
+				if ($transaction->getTransactionId() &&
+						 !in_array($transaction->getState(),
+								array(
+									\Wallee\Sdk\Model\TransactionState::PENDING,
+									\Wallee\Sdk\Model\TransactionState::CREATE 
+								))) {
+					unset($this->session->data['order_id']);
+				}
+			}
+			
 			$available_methods = \Wallee\Service\Transaction::instance($this->registry)->getPaymentMethods($order_info);
 			$configuration_id = substr($this->getCode(), strlen('wallee_'));
 			

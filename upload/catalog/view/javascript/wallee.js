@@ -22,6 +22,13 @@
 			$('#button-confirm').removeAttr('disabled');
 			$('#wallee-iframe-spinner').toggle();
 		},
+		
+		reenable: function() {
+			$('#button-confirm').removeAttr('disabled');
+			if($('html').hasClass('quick-checkout-page')) { // modifications do not work for js
+				triggerLoadingOff();
+			}
+		},
 
 		submit : function() {
 			if (!Wallee.running) {
@@ -39,7 +46,7 @@
 					}
 					else {
 						alert(data.message);
-						$('#button-confirm').removeAttr('disabled');
+						Wallee.reenable();
 					}
 					Wallee.running = false;
 				});
@@ -50,7 +57,7 @@
 			if (result.success) {
 				Wallee.submit();
 			} else {
-				$('#button-confirm').removeAttr('disabled');
+				Wallee.reenable();
 			}
 		},
 
