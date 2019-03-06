@@ -281,8 +281,10 @@ class Transaction extends AbstractService {
 		$order_info = \WalleeHelper::instance($this->registry)->getOrder($order_id);
 		$transaction_info = \Wallee\Entity\TransactionInfo::loadByOrderId($this->registry, $order_id);
 		
+		\WalleeHelper::instance($this->registry)->xfeeproDisableIncVat();
 		$line_items = \Wallee\Service\LineItem::instance($this->registry)->getItemsFromOrder($order_info,
 				$transaction_info->getTransactionId(), $transaction_info->getSpaceId());
+		\WalleeHelper::instance($this->registry)->xfeeproRestoreIncVat();
 		
 		$update_request = new \Wallee\Sdk\Model\TransactionLineItemUpdateRequest();
 		$update_request->setTransactionId($transaction_info->getTransactionId());

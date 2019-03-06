@@ -26,15 +26,11 @@ class WalleeVersionHelper {
 			),
 			'WalleeQuickCheckoutCompatibility' => array(
 				'file' => 'WalleeQuickCheckoutCompatibility.ocmod.xml',
-				'default_status' => 0
-			),
-			'WalleeJournalCompatibility' => array(
-				'file' => 'WalleeJournalCompatibility.ocmod.xml',
-				'default_status' => 0
+				'default_status' => 0 
 			),
 			'WalleeXFeeProCompatibility' => array(
 				'file' => 'WalleeXFeeProCompatibility.ocmod.xml',
-				'default_status' => 0
+				'default_status' => 0 
 			),
 			'WalleePreventConfirmationEmail' => array(
 				'file' => 'WalleePreventConfirmationEmail.ocmod.xml',
@@ -50,8 +46,8 @@ class WalleeVersionHelper {
 			),
 			'WalleeTransactionView' => array(
 				'file' => 'WalleeTransactionView.ocmod.xml',
-				'default_status' => 1
-			)
+				'default_status' => 1 
+			) 
 		);
 	}
 
@@ -117,18 +113,17 @@ class WalleeVersionHelper {
 		
 		return $totals;
 	}
-	
-	public static function persistPluginStatus(\Registry $registry, array $post) {
-	}
-	
-	public static function extractPaymentSettingCode($code) {
+
+	public static function persistPluginStatus(\Registry $registry, array $post){}
+
+	public static function extractPaymentSettingCode($code){
 		return $code;
 	}
 
 	public static function extractLanguageDirectory($language){
 		return $language['directory'];
 	}
-	
+
 	public static function createUrl(\Url $url_provider, $route, $query, $ssl){
 		if (is_array($query)) {
 			$query = http_build_query($query);
@@ -137,5 +132,73 @@ class WalleeVersionHelper {
 			throw new Exception("Query must be of type string or array, " . get_class($query) . " given.");
 		}
 		return $url_provider->link($route, $query, $ssl);
+	}
+
+	public static function getOrderTotals($registry){
+		// Load total extensions
+		$registry->get('load')->model('setting/extension');
+		$totalExtensions = $registry->get('model_setting_extension')->getExtensions('total');
+		$orderedKeys = array();
+		foreach ($totalExtensions as $key => $value) {
+			$orderedKeys[$key] = $registry->get('config')->get($value['code'] . '_sort_order');
+		}
+		array_multisort($orderedKeys, SORT_ASC, $totalExtensions);
+		
+		$resolvedData = self::buildOrderTotalData($registry, $totalExtensions);
+		
+		$taxAmounts = $resolvedData['taxAmounts'];
+		$totalData = $resolvedData['totalData'];
+		
+		// Calculate the tax rates (aggregated per position)
+		foreach ($totalData as $id => $data) {
+			$key = $data['code'];
+			$taxRate = 0;
+			
+			$totalData[$id]['value'] = self::formatAmount($totalData[$id]['value']);
+			
+			if (isset($taxAmounts[$key]) && $taxAmounts[$key] > 0 && $totalData[$id]['value'] != 0) {
+				$taxAmounts[$key] = self::formatAmount($taxAmounts[$key]);
+				$taxRate = round(abs($taxAmounts[$key] / $totalData[$id]['value'] * 100), 4);
+			}
+			$totalData[$id]['tax_rate'] = $taxRate;
+		}
+		
+		return $totalData;
+	}
+
+	private function formatAmount(\Registry $registry, $amount){
+		//TODO helper / version helper moving
+		return $registry->get('currency')->getValue($currency) * $amount;
+	}
+
+	private static function getCurrency(\Registry $registry){
+		if (isset($registry->get('session')->data['currency'])) {
+			return $registry->get('session')->data['currency'];
+		}
+		return $registry->get('config')->get('config_currency');
+	}
+
+	private static function buildOrderTotalData($registry, $totalExtensions){
+		$taxAmounts = array();
+		$totalData = array();
+		$total = 0;
+		foreach ($totalExtensions as $extension) {
+			if ($registry->get('config')->get($extension['code'] . '_status')) {
+				$registry->get('load')->model('total/' . $extension['code']);
+				
+				$taxes = array();
+				$registry->get('model_total_' . $extension['code'])->getTotal($totalData, $total, $taxes);
+				$amount = 0;
+				
+				foreach ($taxes as $value) {
+					$amount += $value;
+				}
+				$taxAmounts[$extension['code']] = $amount;
+			}
+		}
+		return array(
+			'taxAmounts' => $taxAmounts,
+			'totalData' => $totalData 
+		);
 	}
 }

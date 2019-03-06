@@ -40,6 +40,7 @@ abstract class ControllerExtensionPaymentWalleeBase extends AbstractController {
 		catch (Exception $e) {
 			\WalleeHelper::instance($this->registry)->dbTransactionRollback();
 			\WalleeHelper::instance($this->registry)->log($e->getMessage(), \WalleeHelper::LOG_ERROR);
+			$this->load->language('payment/wallee');
 			$result['message'] = $this->language->get('error_confirmation'); 
 			unset($this->session->data['order_id']); // this order number cannot be used anymore
 		}
@@ -49,7 +50,7 @@ abstract class ControllerExtensionPaymentWalleeBase extends AbstractController {
 	}
 
 	private function confirmTransaction(){
-		$transaction = Wallee\Service\Transaction::instance($this->registry)->getTransaction(array(), false,
+		$transaction = Wallee\Service\Transaction::instance($this->registry)->getTransaction($this->getOrderInfo(), false,
 				array(
 					\Wallee\Sdk\Model\TransactionState::PENDING 
 				));
@@ -62,6 +63,14 @@ abstract class ControllerExtensionPaymentWalleeBase extends AbstractController {
 		}
 		
 		throw new Exception('Transaction is not pending.');
+	}
+	
+	private function getOrderInfo() {
+		if(!isset($this->session->data['order_id'])) {
+			throw new Exception("No order_id to confirm.");
+		}
+		$this->load->model('checkout/order');
+		return $this->model_checkout_order->getOrder($this->session->data['order_id']);
 	}
 
 	protected function getRequiredPermission(){

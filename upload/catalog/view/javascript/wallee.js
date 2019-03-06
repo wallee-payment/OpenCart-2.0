@@ -80,7 +80,11 @@
 				Wallee.handler
 						.setInitializeCallback(this.initialized);
 				Wallee.handler
-						.setValidationCallback(this.validated);
+					.setValidationCallback(this.validated);
+				Wallee.handler
+					.setEnableSubmitCallback(this.enableConfirmButton);
+				Wallee.handler
+					.setDisableSubmitCallback(this.disableConfirmButton);
 				Wallee.handler
 						.create('wallee-iframe-container');
 			}

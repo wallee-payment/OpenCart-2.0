@@ -5,13 +5,12 @@
 	</div>
 	<div style="padding: 15px;">
 		<div id="wallee-iframe-spinner" class="text-center">
-			<i style="font-size: 12em;"
-				class='fa fa-spinner fa-spin '></i>
+			<i style="font-size: 12em;" class='fa fa-spinner fa-spin '></i>
 		</div>
-		<div id="wallee-iframe-container" class="text-center" style="display:none;">
-		</div>
+		<div id="wallee-iframe-container" class="text-center"
+			style="display: none;"></div>
 
-		<div class="buttons" style="overflow:hidden;">
+		<div class="buttons" style="overflow: hidden;">
 			<div class="pull-right">
 				<input type="button" value="<?php echo $button_confirm; ?>"
 					id="button-confirm" class="btn btn-primary"
@@ -24,10 +23,13 @@
 	<script type="text/javascript">
     function initWalleeIframe(){
     	if(typeof Wallee === 'undefined') {
-    		setTimeout(initWalleeIframe, 500);
+    		Window.loadWalleeTimeout = setTimeout(initWalleeIframe, 500);
     	} else {
     		Wallee.init('<?php echo $configuration_id; ?>');
     	}
+    }
+    if(typeof Window.loadWalleeTimeout !== 'undefined') {
+		clearTimeout(Window.loadWalleeTimeout);
     }
     jQuery().ready(initWalleeIframe);
     </script>

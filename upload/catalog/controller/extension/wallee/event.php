@@ -19,7 +19,7 @@ class ControllerExtensionWalleeEvent extends Wallee\Controller\AbstractEvent {
 		$script .= '/s/[spaceId]/payment/device.js?sessionIdentifier=[UniqueSessionIdentifier]';
 		
 		$this->setDeviceCookie();
-
+		
 		$script = str_replace(array(
 			'[spaceId]',
 			'[UniqueSessionIdentifier]' 
@@ -81,15 +81,29 @@ class ControllerExtensionWalleeEvent extends Wallee\Controller\AbstractEvent {
 		}
 		
 		if (!empty($new_order)) {
-			\WalleeHelper::instance($this->registry)->log($this->language->get('error_order_edit') . " ($order_id)", \WalleeHelper::LOG_ERROR);
+			\WalleeHelper::instance($this->registry)->log($this->language->get('error_order_edit') . " ($order_id)",
+					\WalleeHelper::LOG_ERROR);
 			
-			$this->language->load('payment/wallee');
-			$this->response->addHeader('Content-Type: application/json');
-			$this->response->setOutput(json_encode(array(
-				'error' => $this->language->get('error_order_edit') 
-			)));
-			$this->response->output();
-			die();
+			if ($this->request->get['route'] == 'checkout/checkout') {
+				// ensure reload without order_id
+				unset($this->session->data['order_id']);
+				\Wallee\Service\Transaction::instance($this->registry)->waitForStates($this->request->get['order_id'],
+						array(
+							\Wallee\Sdk\Model\TransactionState::FAILED 
+						), 5);
+				$transaction_info = \Wallee\Entity\TransactionInfo::loadByOrderId($this->registry, $order_id);
+				$this->session->data['error'] = $transaction_info->getFailureReason();
+				$this->response->redirect($this->createUrl('checkout/checkout', $this->request->get));
+			}
+			else {
+				$this->language->load('payment/wallee');
+				$this->response->addHeader('Content-Type: application/json');
+				$this->response->setOutput(json_encode(array(
+					'error' => $this->language->get('error_order_edit') 
+				)));
+				$this->response->output();
+				die();
+			}
 		}
 	}
 
