@@ -48,6 +48,8 @@
 				is_file(modification($file))
             ]]></add>
 		</operation>
+	</file>
+	<file path="system/library/language.php">
 		<operation>
 			<search><![CDATA[
 				file_exists($file)
@@ -56,6 +58,8 @@
 				file_exists(modification($file))
             ]]></add>
 		</operation>
+	</file>
+	<file path="system/library/language.php">
 		<operation>
 			<search><![CDATA[
 				require($file)
@@ -78,62 +82,44 @@
 	
 	<file path="system/engine/action.php">
 		<operation>
-			<search><![CDATA[
-	is_file($file)
-            ]]></search>
-			<add position="replace"><![CDATA[
-	is_file(modification($file))
-            ]]></add>
+			<search><![CDATA[is_file($file)]]></search>
+			<add position="replace"><![CDATA[is_file(modification($file))]]></add>
 		</operation>
+	</file>
+	<file path="system/engine/action.php">
 		<operation>
-			<search><![CDATA[
-	is_file($this->file)
-            ]]></search>
-			<add position="replace"><![CDATA[
-	is_file(modification($this->file))
-            ]]></add>
+			<search><![CDATA[is_file($this->file)]]></search>
+			<add position="replace"><![CDATA[is_file(modification($this->file))]]></add>
 		</operation>
+	</file>
+	<file path="system/engine/action.php">
 		<operation>
-			<search><![CDATA[
-	include_once($file)
-            ]]></search>
-			<add position="replace"><![CDATA[
-	include_once(modification($file))
-            ]]></add>
+			<search><![CDATA[include_once($file)]]></search>
+			<add position="replace"><![CDATA[include_once(modification($file))]]></add>
 		</operation>
 	</file>
 	<file path="system/engine/loader.php">
 		<operation>
-			<search><![CDATA[
-	is_file($file)
-            ]]></search>
-			<add position="replace"><![CDATA[
-	is_file(modification($file))
-            ]]></add>
+			<search><![CDATA[is_file($file)]]></search>
+			<add position="replace"><![CDATA[is_file(modification($file))]]></add>
 		</operation>
+	</file>
+	<file path="system/engine/loader.php">
 		<operation>
-			<search><![CDATA[
-	file_exists($file)
-            ]]></search>
-			<add position="replace"><![CDATA[
-	file_exists(modification($file))
-            ]]></add>
+			<search><![CDATA[file_exists($file)]]></search>
+			<add position="replace"><![CDATA[file_exists(modification($file))]]></add>
 		</operation>
+	</file>
+	<file path="system/engine/loader.php">
 		<operation>
-			<search><![CDATA[
-	require($file)
-            ]]></search>
-			<add position="replace"><![CDATA[
-	require(modification($file))
-            ]]></add>
+			<search><![CDATA[require($file)]]></search>
+			<add position="replace"><![CDATA[require(modification($file))]]></add>
 		</operation>
+	</file>
+	<file path="system/engine/loader.php">
 		<operation>
-			<search><![CDATA[
-	include_once($file)
-            ]]></search>
-			<add position="replace"><![CDATA[
-	include_once(modification($file))
-            ]]></add>
+			<search><![CDATA[include_once($file)]]></search>
+			<add position="replace"><![CDATA[include_once(modification($file))]]></add>
 		</operation>
 	</file>
 </modification>

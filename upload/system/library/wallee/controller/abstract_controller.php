@@ -13,13 +13,8 @@ namespace Wallee\Controller;
 abstract class AbstractController extends \Controller {
 
 	protected function loadView($template, $data = array()){
-		$template = \WalleeVersionHelper::getTemplate($template);
-		if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/' . $template)) {
-			return $this->load->view($this->config->get('config_template') . '/template/' . $template, $data);
-		}
-		else {
-			return $this->load->view($template, $data);
-		}
+	    $template = \WalleeVersionHelper::getTemplate($this->config->get('config_template'), $template);
+	    return $this->load->view($template, $data);
 	}
 
 	protected function validate(){

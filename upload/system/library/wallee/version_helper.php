@@ -68,8 +68,13 @@ class WalleeVersionHelper {
 		return $value;
 	}
 
-	public static function getTemplate($template){
-		return $template . ".tpl";
+	public static function getTemplate($theme, $template){
+	    if (file_exists(DIR_TEMPLATE . $theme . '/template/' . $template)) {
+	        return $theme . '/template/' . $template . ".tpl";
+	    }
+	    else {
+	        return 'default/template/' . $template . ".tpl";
+	    }
 	}
 
 	public static function newTax(\Registry $registry){
