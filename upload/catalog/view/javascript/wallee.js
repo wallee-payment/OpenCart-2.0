@@ -59,6 +59,9 @@
 				Wallee.submit();
 			} else {
 				Wallee.reenable();
+				if(result.errors) {
+					alert(result.errors.join(" "));
+				}
 			}
 		},
 

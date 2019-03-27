@@ -25,8 +25,8 @@ abstract class ModelExtensionPaymentWalleeBase extends Model {
 		$order_info = array(
 			'payment_address' => $address 
 		);
-		$billing = \WalleeHelper::instance($this->registry)->getAddress('billing');
-		$shipping = \WalleeHelper::instance($this->registry)->getAddress('payment', $order_info);
+		$billing = \WalleeHelper::instance($this->registry)->getAddress('payment');
+		$shipping = \WalleeHelper::instance($this->registry)->getAddress('shipping', $order_info);
 		if (empty($billing) && empty($shipping)) {
 			return array();
 		}

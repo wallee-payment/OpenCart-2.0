@@ -194,8 +194,10 @@ class Transaction extends AbstractService {
 		
 		$transaction->setBillingAddress(
 				$this->assembleAddress(\WalleeHelper::instance($this->registry)->getAddress('payment', $order_info)));
-		$transaction->setShippingAddress(
-				$this->assembleAddress(\WalleeHelper::instance($this->registry)->getAddress('shipping', $order_info)));
+		if($this->registry->get('cart')->hasShipping()) {
+			$transaction->setShippingAddress(
+					$this->assembleAddress(\WalleeHelper::instance($this->registry)->getAddress('shipping', $order_info)));
+		}
 		
 		$customer = \WalleeHelper::instance($this->registry)->getCustomer();
 		if (isset($customer['customer_id'])) {
@@ -203,6 +205,9 @@ class Transaction extends AbstractService {
 		}
 		if (isset($customer['customer_email'])) {
 			$transaction->setCustomerEmailAddress($this->getFixedSource($customer, 'customer_email', 150));
+		}
+		else if (isset($customer['email'])) {
+			$transaction->setCustomerEmailAddress($this->getFixedSource($customer, 'email', 150));
 		}
 		
 		$transaction->setLanguage(\WalleeHelper::instance($this->registry)->getCleanLanguageCode());
@@ -516,7 +521,7 @@ class Transaction extends AbstractService {
 
 	private function storeCoupon(\Wallee\Sdk\Model\Transaction $transaction){
 		if (isset($this->registry->get('session')->data['coupon']) && isset($this->registry->get('session')->data['order_id'])) {
-			$transaction_info = \Wallee\Entity\TransactionInfo::loadByTransaction($this->registry,
+			$transaction_info = \Wallee\Entity\TransactionInfo::loadByOrderId($this->registry,
 					$this->registry->get('session')->data['order_id']);
 			$transaction_info->setTransactionId($transaction->getId());
 			$transaction_info->setSpaceId($transaction->getLinkedSpaceId());
