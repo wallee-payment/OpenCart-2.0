@@ -8,34 +8,24 @@
 	<link>http://github.com/wallee-payment/opencart</link>
 	<file path="admin/controller/extension/payment.php">
 		<operation>
-			<search><![CDATA[
-       				$this->model_extension_extension->uninstall('payment', $value);
-            ]]></search>
-			<add position="replace" offset="2"><![CDATA[
-		            if (strpos($value, 'wallee_') === false) {
+			<search><![CDATA[$this->model_extension_extension->uninstall('payment', $value);]]></search>
+			<add position="replace" offset="2"><![CDATA[if (strpos($value, 'wallee_') === false) {
 		            	$this->model_extension_extension->uninstall('payment', $value);
-		            }
-            ]]></add>
+		            }]]></add>
 		</operation>
+	</file>
+	<file path="admin/controller/extension/payment.php">
 		<operation>
-			<search><![CDATA[
-       				unset($extensions[$key]);
-            ]]></search>
-			<add position="replace" offset="2"><![CDATA[
-		            if (strpos($value, 'wallee_') === false) {
+			<search><![CDATA[unset($extensions[$key]);]]></search>
+			<add position="replace" offset="2"><![CDATA[if (strpos($value, 'wallee_') === false) {
 		            	unset($extensions[$key]);
-		            }
-            ]]></add>
+		            }]]></add>
 		</operation>
 	</file>
 	<file path="admin/controller/error/permission.php">
 		<operation>
-			<search><![CDATA[
-				$ignore = array(
-            ]]></search>
-			<add position="after"><![CDATA[
-					'extension/wallee',
-            ]]></add>
+			<search><![CDATA[$ignore = array(]]></search>
+			<add position="after"><![CDATA['extension/wallee',]]></add>
 		</operation>
 	</file>
 	<!-- order info -->
@@ -59,12 +49,8 @@
 	</file>
 	<file path="admin/controller/sale/order.php">
 		<operation>
-			<search><![CDATA[
-				if (is_file(DIR_CATALOG . 'controller/payment/' . $order_info['payment_code'] . '.php')) {
-            ]]></search>
-			<add position="replace"><![CDATA[
-				if (is_file(DIR_CATALOG . 'controller/payment/' . $order_info['payment_code'] . '.php') || strpos($order_info['payment_code'], 'wallee_') === 0) {
-            ]]></add>
+			<search><![CDATA[if (is_file(DIR_CATALOG . 'controller/payment/' . $order_info['payment_code'] . '.php')) {]]></search>
+			<add position="replace"><![CDATA[if (is_file(DIR_CATALOG . 'controller/payment/' . $order_info['payment_code'] . '.php') || strpos($order_info['payment_code'], 'wallee_') === 0) {]]></add>
 		</operation>
 	</file>
 	

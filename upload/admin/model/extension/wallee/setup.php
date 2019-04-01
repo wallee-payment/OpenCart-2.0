@@ -36,8 +36,8 @@ class ModelExtensionWalleeSetup extends AbstractModel {
 		$this->model_extension_wallee_dynamic->uninstall();
 		if ($purge) {
 			$this->model_extension_wallee_migration->purge();
+			$this->model_extension_wallee_modification->uninstall();
 		}
-		$this->model_extension_wallee_modification->uninstall();
 		
 		$this->removeEvents();
 		$this->removePermissions();
