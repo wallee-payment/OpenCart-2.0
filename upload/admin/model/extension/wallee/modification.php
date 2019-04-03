@@ -8,7 +8,7 @@ class ModelExtensionWalleeModification extends AbstractModel {
 		$path = DIR_SYSTEM . "library/wallee/modification/";
 		$installedModifications = $this->getModificationModel()->getModifications();
 		foreach (WalleeVersionHelper::getModifications() as $code => $modification) {
-			$status = 0;
+			$status = $modification['default_status'];
 			foreach($installedModifications as $installedModification) {
 				if($installedModification['code'] == $code) {
 					$status = $installedModification['status'];
@@ -101,13 +101,15 @@ class ModelExtensionWalleeModification extends AbstractModel {
 			
 			switch (version_compare($currentVersion, $version)) {
 				case -1:
+					// older. delete and add
 					if ($modification_info) {
 						$this->getModificationModel()->deleteModification($modification_info['modification_id']);
 					}
-				case 1:
 					$this->getModificationModel()->addModification($modification_data);
-					break;
+				case 1:
+					// newer. ignore
 				case 0:
+					// same. ignore
 				default:
 					break;
 			}

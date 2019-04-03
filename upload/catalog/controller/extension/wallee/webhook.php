@@ -25,7 +25,7 @@ class ControllerExtensionWalleeWebhook extends Controller {
 			}
 			$webhook_handler_class_name = $webhook_model->getHandlerClassName();
 			$webhook_handler = $webhook_handler_class_name::instance($this->registry);
-			\WalleeHelper::instance($this->registry)->log("Processing webhook with $webhook_handler_class_name", \WalleeHelper::LOG_DEBUG);
+			\WalleeHelper::instance($this->registry)->log("Processing webhook ({$request->getEventId()}) with $webhook_handler_class_name", \WalleeHelper::LOG_DEBUG);
 			$webhook_handler->process($request);
 		}
 		catch (Exception $e) {
