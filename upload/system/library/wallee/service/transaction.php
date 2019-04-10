@@ -194,7 +194,7 @@ class Transaction extends AbstractService {
 		
 		$transaction->setBillingAddress(
 				$this->assembleAddress(\WalleeHelper::instance($this->registry)->getAddress('payment', $order_info)));
-		if($this->registry->get('cart')->hasShipping()) {
+		if ($this->registry->get('cart')->hasShipping()) {
 			$transaction->setShippingAddress(
 					$this->assembleAddress(\WalleeHelper::instance($this->registry)->getAddress('shipping', $order_info)));
 		}
@@ -508,7 +508,8 @@ class Transaction extends AbstractService {
 	}
 
 	private function storeShipping(\Wallee\Sdk\Model\Transaction $transaction){
-		if (isset($this->registry->get('session')->data['shipping_method'])) {
+		$session = $this->registry->get('session')->data;
+		if (isset($session['shipping_method']) && isset($session['shipping_method']['cost']) && !empty($session['shipping_method']['cost'])) {
 			$shipping_info = \Wallee\Entity\ShippingInfo::loadByTransaction($this->registry, $transaction->getLinkedSpaceId(),
 					$transaction->getId());
 			$shipping_info->setTransactionId($transaction->getId());
