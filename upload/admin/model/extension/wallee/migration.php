@@ -7,7 +7,12 @@ class ModelExtensionWalleeMigration extends Model {
 			'name' => 'initialize',
 			'version' => '1.0.0',
 			'function' => 'oc_wallee_update_1_0_0_initialize' 
-		) 
+		),
+		'1.0.1' => array(
+			'name' => 'order_id_nullable',
+			'version' => '1.0.1',
+			'function' => 'oc_wallee_update_1_0_1_order_id_nullable'
+		)
 	);
 
 	public function migrate(){
@@ -229,5 +234,10 @@ class ModelExtensionWalleeMigration extends Model {
 				KEY (`security_token`),
 				UNIQUE KEY (`constraint_key`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci");
+	}
+	
+	private function oc_wallee_update_1_0_1_order_id_nullable(){
+		$this->db->query(
+				"ALTER TABLE `" . DB_PREFIX . "wallee_transaction_info` MODIFY COLUMN `order_id` int(11) unsigned NULL;");
 	}
 }

@@ -93,7 +93,6 @@
 	                	<input type="text" class="form-control" name="filters[space_view_id]" value="<?php if(isset($filters['space_view_id'])) { echo $filters['space_view_id']; }?>">
 	                </td>
 	                <td class="text-right">
-	                <!-- TODO dropdown -->
 	                <select class="form-control" name="filters[state]">
 	                	<?php foreach ($order_statuses as $status): ?>
 	                	<option value="<?php echo $status?>" <?php if(isset($filters['state']) && $filters['state'] == $status) { echo "selected"; } ?>><?php echo $status; ?></option>

@@ -43,6 +43,7 @@ abstract class ControllerExtensionPaymentWalleeBase extends AbstractController {
 			$this->load->language('payment/wallee');
 			$result['message'] = $this->language->get('error_confirmation'); 
 			unset($this->session->data['order_id']); // this order number cannot be used anymore
+			Wallee\Service\Transaction::instance($this->registry)->clearTransactionInSession();
 		}
 		
 		$this->response->addHeader('Content-Type: application/json');
