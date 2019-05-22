@@ -119,7 +119,7 @@ class ModelExtensionWalleeDynamic extends AbstractModel {
 			
 			$title = array_values($configuration['title'])[0];
 			if (isset($configuration['title'][$restLang->getIetfCode()])) {
-				$title = \Wallee\Provider\Language::instance($this->registry)->find($code);
+				$title = $configuration['title'][$restLang->getIetfCode()];
 			}
 			$target = str_replace('#code#', WalleeVersionHelper::extractLanguageDirectory($language), $target_base);
 			

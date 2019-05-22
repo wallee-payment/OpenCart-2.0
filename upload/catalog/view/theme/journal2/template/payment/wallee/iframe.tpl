@@ -1,9 +1,27 @@
+<style>
+.panel-heading {
+	background-color: initial;
+}
+
+.route-checkout-checkout .panel-heading:hover {
+	background-color: initial;
+}
+
+.wallee-container {
+	padding: 15px;
+}
+
+#wallee-iframe-spinner {
+	display: none;
+	margin: auto;
+}
+</style>
 <div class="panel panel-default">
 	<div class="panel-heading">
 		<h4><?php echo $text_payment_title; ?></h4>
 		<span><?php echo $text_further_details; ?></span>
 	</div>
-	<div style="padding: 15px;">
+	<div class="wallee-container">
 		<div id="wallee-iframe-spinner" class="text-center">
 			<i style="font-size: 12em;" class='fa fa-spinner fa-spin '></i>
 		</div>
@@ -21,6 +39,10 @@
 	<script type="text/javascript" src="<?php echo $external_js; ?>"></script>
 	<script type="text/javascript" src="<?php echo $opencart_js; ?>"></script>
 	<script type="text/javascript">
+    $('#journal-checkout-confirm-button').attr('disabled', 'disabled');
+    if(typeof Window.walleeTimeout !== 'undefined') {
+        clearTimeout(Window.walleeTimeout);
+    }
 	function initAddressUpdates() {
 		if(typeof window.addressUpdateEventsSet === 'undefined') {
 			window.addressUpdateEventsSet = true;
@@ -57,18 +79,26 @@
 			registerAddressUpdates('shipping');
 		}
 	}
-	
     function initWalleeIframe(){
-    	if(typeof Wallee === 'undefined') {
-    		Window.loadWalleeTimeout = setTimeout(initWalleeIframe, 500);
-    	} else {
-    		Wallee.init('<?php echo $configuration_id; ?>');
-    		initAddressUpdates();
-    	}
+        jQuery('#wallee-iframe-spinner').css("display", "block");
+        if(typeof jQuery === 'undefined' || typeof Wallee === 'undefined') {
+            Window.walleeTimeout = setTimeout(initWalleeIframe, 500);
+        } else {
+            Wallee.init('<?php echo $configuration_id; ?>');
+            initAddressUpdates();
+        }
     }
-    if(typeof Window.loadWalleeTimeout !== 'undefined') {
-		clearTimeout(Window.loadWalleeTimeout);
+    var checked = $('[data-wallee-original-checked=true]').val();
+    if(checked && checked.startsWith('wallee_')) {
+        if (typeof Window.loadCounter === 'undefined') {
+            Window.loadCounter = 1;
+        } else if (Window.loadCounter == 1) {
+            Window.loadCounter++;
+        } else if (Window.loadCounter == 2) {
+            jQuery().ready(initWalleeIframe);
+        }
+    } else {
+        jQuery().ready(initWalleeIframe);
     }
-    jQuery().ready(initWalleeIframe);
     </script>
 </div>
