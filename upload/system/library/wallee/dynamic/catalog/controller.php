@@ -9,8 +9,9 @@ abstract class ControllerExtensionPaymentWalleeBase extends AbstractController {
 			return '';
 		}
 		$this->load->language('payment/wallee');
+		$data = array();
 		
-		$data['configuration_id'] = substr($this->getCode(), strlen('wallee_'));
+		$data['configuration_id'] = \WalleeHelper::extractPaymentMethodId($this->getCode());
 		
 		$data['button_confirm'] = $this->language->get('button_confirm');
 		$data['text_loading'] = $this->language->get('text_loading');
