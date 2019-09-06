@@ -1,4 +1,5 @@
 <?php
+
 require_once modification(DIR_SYSTEM . 'library/wallee/helper.php');
 
 class ModelExtensionWalleeMigration extends Model {
@@ -16,9 +17,11 @@ class ModelExtensionWalleeMigration extends Model {
 	);
 
 	public function migrate(){
+		\WalleeHelper::instance($this->registry)->log("Starting migration");
 		$currentVersion = '0.0.0';
 		if ($this->config->has('wallee_migration_version')) {
 			$currentVersion = $this->config->get('wallee_migration_version');
+			\WalleeHelper::instance($this->registry)->log("Current version: $currentVersion");
 		}
 		$startingVersion = $currentVersion;
 		
@@ -26,12 +29,14 @@ class ModelExtensionWalleeMigration extends Model {
 			\WalleeHelper::instance($this->registry)->dbTransactionStart();
 			try {
 				if (version_compare($currentVersion, $migration['version']) === -1) {
+					\WalleeHelper::instance($this->registry)->log("Running {$migration['name']}");
 					$this->{$migration['function']}();
 					\WalleeHelper::instance($this->registry)->dbTransactionCommit();
 					$currentVersion = $migration['version'];
 				}
 			}
 			catch (Exception $e) {
+				\WalleeHelper::instance($this->registry)->log($e->getMessage());
 				\WalleeHelper::instance($this->registry)->dbTransactionRollback();
 				break;
 			}
@@ -39,10 +44,12 @@ class ModelExtensionWalleeMigration extends Model {
 		
 		// update version if required
 		if (version_compare($startingVersion, $currentVersion) !== 0) {
+			\WalleeHelper::instance($this->registry)->log("Updating version");
 			$this->load->model('setting/setting');
 			$settings = $this->model_setting_setting->getSetting('wallee');
 			$settings['wallee_migration_version'] = self::$migrations[$currentVersion]['version'];
 			$settings['wallee_migration_name'] = self::$migrations[$currentVersion]['name'];
+			\WalleeHelper::instance($this->registry)->log("Currently at ". self::$migrations[$currentVersion]['version'].": ".self::$migrations[$currentVersion]['name']);
 			$this->model_setting_setting->editSetting('wallee', $settings);
 		}
 	}

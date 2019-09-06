@@ -45,7 +45,7 @@ abstract class ModelExtensionPaymentWalleeBase extends Model {
 			}
 			
 			$available_methods = \Wallee\Service\Transaction::instance($this->registry)->getPaymentMethods($order_info);
-			$configuration_id = substr($this->getCode(), \WalleeHelper::extractPaymentMethodId($this->getCode()));
+			$configuration_id = \WalleeHelper::extractPaymentMethodId($this->getCode());
 			
 			foreach ($available_methods as $method) {
 				if ($method->getId() == $configuration_id) {

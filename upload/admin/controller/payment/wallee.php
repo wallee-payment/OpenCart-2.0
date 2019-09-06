@@ -125,6 +125,8 @@ class ControllerPaymentWallee extends AbstractController {
 		$newSettings['wallee_download_invoice'] = isset($store['wallee_download_invoice']);
 		$newSettings['wallee_download_packaging'] = isset($store['wallee_download_packaging']);
 		
+		$newSettings['wallee_rounding_adjustment'] = isset($store['wallee_rounding_adjustment']);
+		
 		WalleeVersionHelper::persistPluginStatus($this->registry, $newSettings);
 		
 		$this->model_setting_setting->editSetting('wallee', $newSettings, $store['id']);
@@ -239,6 +241,10 @@ class ControllerPaymentWallee extends AbstractController {
 		$data['entry_log_level'] = $this->language->get('entry_log_level');
 		$data['help_log_level'] = $this->language->get('help_log_level');
 		$data['log_levels'] = $this->getLogLevels();
+		
+		$data['title_rounding_adjustment'] = $this->language->get('title_rounding_adjustment');
+		$data['entry_rounding_adjustment'] = $this->language->get('entry_rounding_adjustment');
+		$data['description_rounding_adjustment'] = $this->language->get('description_rounding_adjustment');
 		
 		$data['entry_email'] = $this->language->get("entry_email");
 		$data['description_email'] = $this->language->get("description_email");
@@ -431,6 +437,8 @@ class ControllerPaymentWallee extends AbstractController {
 			"wallee_log_level" => \WalleeHelper::LOG_ERROR,
 			
 			"wallee_notification_url" => null,
+			
+			"wallee_rounding_adjustment" => 0,
 			
 			"wallee_download_packaging" => 1,
 			"wallee_download_invoice" => 1,

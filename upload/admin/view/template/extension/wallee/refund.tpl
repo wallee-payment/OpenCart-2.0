@@ -110,7 +110,7 @@ function echoAmount($amount, $currency_decimals){
 									</dl>
 								</td>
 								<td>
-								<?php if (count($line_item->getTaxes()) >= 1) : ?>
+								<?php if (!empty($line_item->getTaxes())) : ?>
 									<dl class="row" style="margin-right: 0px">
 									<?php foreach ($line_item->getTaxes() as $tax_rate) :?>
 										<dt class="col-sm-6"><?php echo $tax_rate->getTitle(); ?></dt>

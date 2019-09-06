@@ -225,6 +225,21 @@
 									</div>
 								</div>
 							</fieldset>
+
+							<fieldset>
+								<legend><?php echo htmlspecialchars($title_rounding_adjustment) ?></legend>
+								<div class="form-group">
+									<label class="col-sm-2 control-label"><?php echo htmlspecialchars($entry_rounding_adjustment) ?></label>
+
+									<div class="col-sm-10">
+										<input type="checkbox"
+											name="stores[<?php echo $store['id'] ?>][wallee_rounding_adjustment]"
+											<?php if($stores[$store['id']]['wallee_rounding_adjustment']) { ?>
+											checked <?php } ?> value="1"/>
+										<p class="form-control-static"><?php echo $description_rounding_adjustment ?></p>
+									</div>
+								</div>
+							</fieldset>
 						</div>
 					</div>
 				</div>
