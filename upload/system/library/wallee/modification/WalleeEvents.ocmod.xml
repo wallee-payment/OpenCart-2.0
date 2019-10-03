@@ -15,7 +15,6 @@
 		try{
 			$this->load->controller('extension/wallee/event/includeDeviceIdentifier');
 			
-			\WalleeHelper::instance($this->registry)->refreshWebhook();
 			\Wallee\Entity\Cron::cleanUpHangingCrons($this->registry);
 			\Wallee\Entity\Cron::insertNewPendingCron($this->registry);
 			$wallee_cron_token = \Wallee\Entity\Cron::getCurrentSecurityTokenForPendingCron($this->registry);
