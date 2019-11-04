@@ -662,7 +662,7 @@ class WalleeHelper {
 	}
 
 	public static function getBaseUrl(){
-		return "https://app-wallee.com:443";
+		return rtrim("https://app-wallee.com/", '/');
 	}
 
 	public static function isEditableState($state){
