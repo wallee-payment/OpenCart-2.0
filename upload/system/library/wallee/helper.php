@@ -28,7 +28,7 @@ class WalleeHelper {
 			$this->loggers = array(
 				self::LOG_ERROR => $registry->get('log'),
 				self::LOG_DEBUG => new Log('wallee_debug.log'),
-				self::LOG_INFO => new Log('wallee_info.log') 
+				self::LOG_INFO => new Log('wallee_info.log')
 			);
 		}
 		else {
@@ -108,14 +108,15 @@ class WalleeHelper {
 		else {
 			return false;
 		}
-		
+
 		$parts = explode('_', $id);
 		$customer = $this->getCustomer();
 		switch ($parts[0]) {
 			case 'customer':
 				return isset($customer['customer_id']) && 'customer_' . $customer['customer_id'] == $id;
 			case 'user':
-				return (isset($customer['user_id']) && 'user_' . $customer['user_id'] == $id) || (isset($data['user_id']) && 'user_' . $data['user_id'] == $id);
+				return (isset($customer['user_id']) && 'user_' . $customer['user_id'] == $id) ||
+						(isset($data['user_id']) && 'user_' . $data['user_id'] == $id);
 			case 'guest':
 				return $this->buildGuestSessionIdentifier($customer) == $id;
 			case 'cart':
@@ -140,17 +141,17 @@ class WalleeHelper {
 		$session = $this->registry->get('session')->data;
 		$address_model = $this->registry->get('model_account_address');
 		$address = array();
-		
+
 		if (isset($order_info[$key . '_address'])) {
 			$address = \WalleeHelper::mergeArray($address, $order_info[$key . '_address']);
 		}
 		if (isset($order_info[$key . '_address_id'])) {
 			$address = \WalleeHelper::mergeArray($address, $address_model->getAddress($$order_info[$key . '_address_id']));
 		}
-		if(empty($address) && $key != 'payment') {
+		if (empty($address) && $key != 'payment') {
 			$address = $this->getAddress('payment', $order_info);
 		}
-		if(empty($address)) {
+		if (empty($address)) {
 			if ($customer && $customer->isLogged() && isset($session[$key . '_address_id'])) {
 				$address = $address_model->getAddress($session[$key . '_address_id']);
 			}
@@ -170,7 +171,7 @@ class WalleeHelper {
 	public function refreshWebhook(){
 		$db = $this->registry->get('db');
 		$config = DB_PREFIX . 'setting';
-		
+
 		$generated = $this->getWebhookUrl();
 		$saved = $this->registry->get('config')->get('wallee_notification_url');
 		if ($generated == $saved) {
@@ -179,7 +180,7 @@ class WalleeHelper {
 		$space_id = $this->registry->get('config')->get('wallee_space_id');
 		\Wallee\Service\Webhook::instance($this->registry)->uninstall($space_id, $saved);
 		\Wallee\Service\Webhook::instance($this->registry)->install($space_id, $generated);
-		
+
 		$store_id = $this->registry->get('config')->get('config_store_id');
 		if ($store_id === null) {
 			$store_id = 0;
@@ -217,14 +218,14 @@ class WalleeHelper {
 
 	public function hasRunningJobs(\Wallee\Entity\TransactionInfo $transaction_info){
 		return \Wallee\Entity\CompletionJob::countRunningForOrder($this->registry, $transaction_info->getOrderId()) +
-				 \Wallee\Entity\VoidJob::countRunningForOrder($this->registry, $transaction_info->getOrderId()) +
-				 \Wallee\Entity\RefundJob::countRunningForOrder($this->registry, $transaction_info->getOrderId()) > 0;
+				\Wallee\Entity\VoidJob::countRunningForOrder($this->registry, $transaction_info->getOrderId()) +
+				\Wallee\Entity\RefundJob::countRunningForOrder($this->registry, $transaction_info->getOrderId()) > 0;
 	}
 
 	public function isCompletionPossible(\Wallee\Entity\TransactionInfo $transaction_info){
 		return $transaction_info->getState() == \Wallee\Sdk\Model\TransactionState::AUTHORIZED &&
-				 (\Wallee\Entity\CompletionJob::countRunningForOrder($this->registry, $transaction_info->getOrderId()) == 0) &&
-				 (\Wallee\Entity\VoidJob::countRunningForOrder($this->registry, $transaction_info->getOrderId()) == 0);
+				(\Wallee\Entity\CompletionJob::countRunningForOrder($this->registry, $transaction_info->getOrderId()) == 0) &&
+				(\Wallee\Entity\VoidJob::countRunningForOrder($this->registry, $transaction_info->getOrderId()) == 0);
 	}
 
 	public function isRefundPossible(\Wallee\Entity\TransactionInfo $transaction_info){
@@ -232,7 +233,7 @@ class WalleeHelper {
 				array(
 					\Wallee\Sdk\Model\TransactionState::COMPLETED,
 					\Wallee\Sdk\Model\TransactionState::FULFILL,
-					\Wallee\Sdk\Model\TransactionState::DECLINE 
+					\Wallee\Sdk\Model\TransactionState::DECLINE
 				))) {
 			return false;
 		}
@@ -372,14 +373,14 @@ class WalleeHelper {
 	 */
 	public function dbTransactionLock($space_id, $transaction_id){
 		$db = $this->registry->get('db');
-		
+
 		$table = DB_PREFIX . 'wallee_transaction_info';
 		$locked_at = date('Y-m-d H:i:s');
 		$space_id = $db->escape($space_id);
 		$transaction_id = $db->escape($transaction_id);
-		
+
 		$db->query("SELECT locked_at FROM $table WHERE transaction_id = '$transaction_id' AND space_id = '$space_id' FOR UPDATE");
-		
+
 		$db->query("UPDATE $table SET locked_at = '$locked_at' WHERE transaction_id = '$transaction_id' AND space_id = '$space_id'");
 	}
 
@@ -388,7 +389,7 @@ class WalleeHelper {
 		if (isset($strings[$language])) {
 			return $strings[$language];
 		}
-		
+
 		if ($language) {
 			try {
 				$language_provider = \Wallee\Provider\Language::instance($this->registry);
@@ -434,10 +435,10 @@ class WalleeHelper {
 				$language = $config->get('config_admin_language');
 			}
 		}
-		
+
 		$prefixWithDash = substr($language, 0, 3);
 		$postfix = strtoupper(substr($language, 3));
-		
+
 		return $prefixWithDash . $postfix;
 	}
 
@@ -468,7 +469,7 @@ class WalleeHelper {
 
 	public function getSuccessUrl(){
 		return WalleeVersionHelper::createUrl($this->getCatalogUrl(), 'checkout/success', array(
-			'utm_nooverride' => 1 
+			'utm_nooverride' => 1
 		), $this->registry->get('config')->get('config_secure'));
 	}
 
@@ -477,7 +478,7 @@ class WalleeHelper {
 				WalleeVersionHelper::createUrl($this->getCatalogUrl(), 'extension/wallee/transaction/fail',
 						array(
 							'order_id' => $order_id,
-							'utm_nooverride' => 1 
+							'utm_nooverride' => 1
 						), $this->registry->get('config')->get('config_secure')));
 	}
 
@@ -494,7 +495,8 @@ class WalleeHelper {
 	public function isValidOrder($order_id){
 		if (!$this->isAdmin()) {
 			$order_info = $this->getOrder($order_id);
-			if ($this->registry->get('customer') && $this->registry->get('customer')->isLogged() && isset($this->registry->get('session')->data['customer_id'])) {
+			if ($this->registry->get('customer') && $this->registry->get('customer')->isLogged() &&
+					isset($this->registry->get('session')->data['customer_id'])) {
 				if ($this->registry->get('session')->data['customer_id'] != $order_info['customer_id']) {
 					return false;
 				}
@@ -539,6 +541,21 @@ class WalleeHelper {
 		$this->registry->get('model_checkout_order')->addOrderHistory($order_id, $status, $message, $notify);
 	}
 
+	public function ensurePaymentCode(array $order_info, \Wallee\Sdk\Model\Transaction $transaction){
+		$code = 'wallee_' . $transaction->getPaymentConnectorConfiguration()->getPaymentMethodConfiguration()->getId();
+		if ($order_info['payment_code'] == $code) {
+			return;
+		}
+		$db = $this->registry->get('db');
+		$table = DB_PREFIX . 'order';
+		$code = $db->escape($code);
+		$title = $db->escape($transaction->getPaymentConnectorConfiguration()->getPaymentMethodConfiguration()->getName());
+		$order_id = $db->escape($order_info['order_id']);
+		$query = "UPDATE `$table` SET `payment_code`='$code', `payment_method`='$title' WHERE `order_id`='$order_id';";
+		$this->log("Changing payment method on order: [" . $query . "], was [" . $order_info['payment_code'] . "]", self::LOG_DEBUG);
+		$db->query($query);
+	}
+
 	/**
 	 *
 	 * @return Url
@@ -580,10 +597,10 @@ class WalleeHelper {
 	public function rewrite($url){
 		return str_replace(array(
 			HTTP_SERVER,
-			HTTPS_SERVER 
+			HTTPS_SERVER
 		), array(
 			HTTP_CATALOG,
-			HTTPS_CATALOG 
+			HTTPS_CATALOG
 		), $url);
 	}
 
@@ -614,30 +631,31 @@ class WalleeHelper {
 		$limit = $this->registry->get('config')->get('config_limit_admin');
 		return $page * $limit;
 	}
-	
+
 	/**
-	 * Disable inc vat setting in xfeepro. Necessary to ensure taxes are calculated and transmitted correctly.
+	 * Disable inc vat setting in xfeepro.
+	 * Necessary to ensure taxes are calculated and transmitted correctly.
 	 */
-	public function xfeeproDisableIncVat() {
+	public function xfeeproDisableIncVat(){
 		$config = $this->registry->get('config');
 		$xfeepro = $config->get('xfeepro');
-		if($xfeepro) {
+		if ($xfeepro) {
 			$xfeepro = unserialize(base64_decode($xfeepro));
 			$this->xfeepro = $xfeepro;
-			if(isset($xfeepro['inc_vat'])) {
-				foreach($xfeepro['inc_vat'] as $i => $value) {
+			if (isset($xfeepro['inc_vat'])) {
+				foreach ($xfeepro['inc_vat'] as $i => $value) {
 					$xfeepro['inc_vat'][$i] = 0;
-				}	
+				}
 			}
 			$config->set('xfeepro', base64_encode(serialize($xfeepro)));
 		}
 	}
-	
+
 	/**
 	 * Restore xfeepro settings.
 	 */
-	public function xfeeProRestoreIncVat() {
-		if($this->xfeepro) {
+	public function xfeeProRestoreIncVat(){
+		if ($this->xfeepro) {
 			$this->registry->get('config')->set('xfeepro', base64_encode(serialize($this->xfeepro)));
 		}
 	}
@@ -648,8 +666,8 @@ class WalleeHelper {
 		}
 		return self::$instance;
 	}
-	
-	public static function extractPaymentMethodId($code) {
+
+	public static function extractPaymentMethodId($code){
 		return substr($code, strlen('wallee_'));
 	}
 
@@ -669,7 +687,7 @@ class WalleeHelper {
 		$completable_states = array(
 			\Wallee\Sdk\Model\TransactionState::AUTHORIZED,
 			\Wallee\Sdk\Model\TransactionState::CONFIRMED,
-			\Wallee\Sdk\Model\TransactionState::PROCESSING 
+			\Wallee\Sdk\Model\TransactionState::PROCESSING
 		);
 		return in_array($state, $completable_states);
 	}

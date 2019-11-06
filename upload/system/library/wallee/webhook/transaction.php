@@ -28,10 +28,9 @@ class Transaction extends AbstractOrderRelated {
 	}
 
 	protected function processOrderRelatedInner(array $order_info, $transaction){
-		$oid = $order_info['order_id'];
-		$tid = $transaction->getId();
 		/* @var \Wallee\Sdk\Model\Transaction $transaction */
 		$transaction_info = \Wallee\Entity\TransactionInfo::loadByOrderId($this->registry, $order_info['order_id']);
+		\WalleeHelper::instance($this->registry)->ensurePaymentCode($order_info, $transaction);
 		if ($transaction->getState() != $transaction_info->getState()) {
 			switch ($transaction->getState()) {
 				case \Wallee\Sdk\Model\TransactionState::CONFIRMED:
@@ -71,13 +70,11 @@ class Transaction extends AbstractOrderRelated {
 	}
 
 	protected function processing(\Wallee\Sdk\Model\Transaction $transaction, array $order_info){
-		// TODO none..
 		\WalleeHelper::instance($this->registry)->addOrderHistory($order_info['order_id'], 'wallee_processing_status_id',
 				\WalleeHelper::instance($this->registry)->getTranslation('message_webhook_processing'));
 	}
 
 	protected function confirm(\Wallee\Sdk\Model\Transaction $transaction, array $order_info){
-		// TODO none..
 		\WalleeHelper::instance($this->registry)->addOrderHistory($order_info['order_id'], 'wallee_processing_status_id',
 				\WalleeHelper::instance($this->registry)->getTranslation('message_webhook_confirm'));
 	}
@@ -98,7 +95,6 @@ class Transaction extends AbstractOrderRelated {
 	}
 
 	protected function failed(\Wallee\Sdk\Model\Transaction $transaction, array $order_info){
-		// TODO none
 		\WalleeHelper::instance($this->registry)->addOrderHistory($order_info['order_id'], 'wallee_failed_status_id',
 				\WalleeHelper::instance($this->registry)->getTranslation('message_webhook_failed'));
 	}
