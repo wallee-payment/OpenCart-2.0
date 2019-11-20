@@ -1,9 +1,9 @@
 <?php
 /**
- * wallee SDK
+ *  SDK
  *
- * This library allows to interact with the wallee payment service.
- * wallee SDK: 1.0.0
+ * This library allows to interact with the  payment service.
+ *  SDK: 2.0.4
  * 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,7 @@
  */
 
 namespace Wallee\Sdk\Model;
-
-
+use \Wallee\Sdk\ObjectSerializer;
 
 /**
  * SubscriptionChargeState model
@@ -32,15 +31,31 @@ namespace Wallee\Sdk\Model;
  * @author      customweb GmbH
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
-class SubscriptionChargeState implements IEnum {
-
-	const SCHEDULED = 'SCHEDULED';
-	const DISCARDED = 'DISCARDED';
-	const PROCESSING = 'PROCESSING';
-	const SUCCESSFUL = 'SUCCESSFUL';
-	const FAILED = 'FAILED';
-	
-
-	
-
+class SubscriptionChargeState
+{
+    /**
+     * Possible values of this enum
+     */
+    const SCHEDULED = 'SCHEDULED';
+    const DISCARDED = 'DISCARDED';
+    const PROCESSING = 'PROCESSING';
+    const SUCCESSFUL = 'SUCCESSFUL';
+    const FAILED = 'FAILED';
+    
+    /**
+     * Gets allowable values of the enum
+     * @return string[]
+     */
+    public static function getAllowableEnumValues()
+    {
+        return [
+            self::SCHEDULED,
+            self::DISCARDED,
+            self::PROCESSING,
+            self::SUCCESSFUL,
+            self::FAILED,
+        ];
+    }
 }
+
+

@@ -1,9 +1,9 @@
 <?php
 /**
- * wallee SDK
+ *  SDK
  *
- * This library allows to interact with the wallee payment service.
- * wallee SDK: 1.0.0
+ * This library allows to interact with the  payment service.
+ *  SDK: 2.0.4
  * 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,7 @@
  */
 
 namespace Wallee\Sdk\Model;
-
-
+use \Wallee\Sdk\ObjectSerializer;
 
 /**
  * PaymentLinkProtectionMode model
@@ -32,12 +31,25 @@ namespace Wallee\Sdk\Model;
  * @author      customweb GmbH
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
-class PaymentLinkProtectionMode implements IEnum {
-
-	const NO_PROTECTION = 'NO_PROTECTION';
-	const ACCESS_KEY = 'ACCESS_KEY';
-	
-
-	
-
+class PaymentLinkProtectionMode
+{
+    /**
+     * Possible values of this enum
+     */
+    const NO_PROTECTION = 'NO_PROTECTION';
+    const ACCESS_KEY = 'ACCESS_KEY';
+    
+    /**
+     * Gets allowable values of the enum
+     * @return string[]
+     */
+    public static function getAllowableEnumValues()
+    {
+        return [
+            self::NO_PROTECTION,
+            self::ACCESS_KEY,
+        ];
+    }
 }
+
+

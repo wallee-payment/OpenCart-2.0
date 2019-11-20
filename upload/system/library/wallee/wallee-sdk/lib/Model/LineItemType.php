@@ -1,9 +1,9 @@
 <?php
 /**
- * wallee SDK
+ *  SDK
  *
- * This library allows to interact with the wallee payment service.
- * wallee SDK: 1.0.0
+ * This library allows to interact with the  payment service.
+ *  SDK: 2.0.4
  * 
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +20,7 @@
  */
 
 namespace Wallee\Sdk\Model;
-
-
+use \Wallee\Sdk\ObjectSerializer;
 
 /**
  * LineItemType model
@@ -32,14 +31,29 @@ namespace Wallee\Sdk\Model;
  * @author      customweb GmbH
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
-class LineItemType implements IEnum {
-
-	const SHIPPING = 'SHIPPING';
-	const DISCOUNT = 'DISCOUNT';
-	const FEE = 'FEE';
-	const PRODUCT = 'PRODUCT';
-	
-
-	
-
+class LineItemType
+{
+    /**
+     * Possible values of this enum
+     */
+    const SHIPPING = 'SHIPPING';
+    const DISCOUNT = 'DISCOUNT';
+    const FEE = 'FEE';
+    const PRODUCT = 'PRODUCT';
+    
+    /**
+     * Gets allowable values of the enum
+     * @return string[]
+     */
+    public static function getAllowableEnumValues()
+    {
+        return [
+            self::SHIPPING,
+            self::DISCOUNT,
+            self::FEE,
+            self::PRODUCT,
+        ];
+    }
 }
+
+
