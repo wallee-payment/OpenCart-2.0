@@ -41,6 +41,6 @@ class DeliveryIndication extends AbstractOrderRelated {
 
 	protected function review(array $order_info){
 		\WalleeHelper::instance($this->registry)->addOrderHistory($order_info['order_id'], $order_info['order_status_id'],
-				\WalleeHelper::instance($this->registry)->getTranslation('message_webhook_manual'));
+				\WalleeHelper::instance($this->registry)->getTranslation('message_webhook_manual'), true);
 	}
 }

@@ -14,6 +14,8 @@ class ControllerExtensionWalleeCron extends Controller {
 			die();
 		}
 		
+		\Wallee\Entity\Cron::cleanUpCronDB($this->registry);
+		
 		try {
 			\WalleeHelper::instance($this->registry)->dbTransactionStart();
 			$result = \Wallee\Entity\Cron::setProcessing($this->registry, $security_token);
