@@ -112,7 +112,7 @@ class ModelExtensionWalleeDynamic extends AbstractModel {
 				continue;
 			}
 			$restLang = \Wallee\Provider\Language::instance($this->registry)->findForStore($language['code'], $language['locale']);
-			if ($restLang === false) {
+			if (empty($restLang)) {
 				\WalleeHelper::instance($this->registry)->log("Could not find language for code $code.");
 				continue;
 			}

@@ -13,7 +13,12 @@ class ModelExtensionWalleeMigration extends Model {
 			'name' => 'order_id_nullable',
 			'version' => '1.0.1',
 			'function' => 'oc_wallee_update_1_0_1_order_id_nullable'
-		)
+		),
+		'1.0.2' => array(
+			'name' => 'clear_cache',
+			'version' => '1.0.2',
+			'function' => 'oc_wallee_update_1_0_2_clear_cache'
+		),
 	);
 
 	public function migrate(){
@@ -246,5 +251,14 @@ class ModelExtensionWalleeMigration extends Model {
 	private function oc_wallee_update_1_0_1_order_id_nullable(){
 		$this->db->query(
 				"ALTER TABLE `" . DB_PREFIX . "wallee_transaction_info` MODIFY COLUMN `order_id` int(11) unsigned NULL;");
+	}
+	
+	private function oc_wallee_update_1_0_2_clear_cache() {
+		\Wallee\Provider\Language::instance($this->registry)->clearCache();
+		\Wallee\Provider\Currency::instance($this->registry)->clearCache();
+		\Wallee\Provider\LabelDescriptionGroup::instance($this->registry)->clearCache();
+		\Wallee\Provider\LabelDescriptor::instance($this->registry)->clearCache();
+		\Wallee\Provider\PaymentConnector::instance($this->registry)->clearCache();
+		\Wallee\Provider\PaymentMethod::instance($this->registry)->clearCache();
 	}
 }
