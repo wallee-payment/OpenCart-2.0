@@ -541,16 +541,30 @@ class WalleeHelper {
 		$this->registry->get('load')->model('checkout/order');
 		$model = $this->registry->get('model_checkout_order');
 		$order = $model->getOrder($order_id);
-		if($order['status'] !== $status || $force) {
+		if ($order['order_status_id'] !== $status || $force) {
 			$model->addOrderHistory($order_id, $status, $message, $notify);
-		} else {
+		}
+		else {
 			$this->log("Skipped adding order history, same status & !force.");
 		}
 	}
 
 	public function ensurePaymentCode(array $order_info, \Wallee\Sdk\Model\Transaction $transaction){
-		$code = 'wallee_' . $transaction->getPaymentConnectorConfiguration()->getPaymentMethodConfiguration()->getId();
-		if ($order_info['payment_code'] == $code) {
+		$allowed = $transaction->getAllowedPaymentMethodConfigurations();
+		$code = null;
+		if (count($allowed) === 1) {
+			$code = 'wallee_' . $allowed[0];
+		}
+		else if (!empty($transaction->getPaymentConnectorConfiguration()) &&
+				!empty($transaction->getPaymentConnectorConfiguration()->getPaymentMethodConfiguration())) {
+			$code = 'wallee_' . $transaction->getPaymentConnectorConfiguration()->getPaymentMethodConfiguration()->getId();
+		}
+		else {
+			$this->log("No payment method on transaction, skipping payment code setting.", self::LOG_DEBUG);
+			$this->log($transaction, self::LOG_DEBUG);
+			return;
+		}
+		if ($order_info['payment_code'] === $code) {
 			return;
 		}
 		$db = $this->registry->get('db');
