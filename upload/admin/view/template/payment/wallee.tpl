@@ -252,6 +252,24 @@
 				</div>
 				<div class="panel-body">
 					<fieldset>
+						<legend><?php echo $title_version; ?></legend>
+	
+						<div class="form-group">
+							<label class="col-sm-2 control-label"><?php echo $entry_version; ?></label>
+							<div class="col-sm-10">
+								<p class="form-control-static">1.0.40</p>
+							</div>
+						</div>
+	
+						<div class="form-group">
+							<label class="col-sm-2 control-label"><?php echo $entry_date; ?></label>
+							<div class="col-sm-10">
+								<p class="form-control-static">2020/07/20 08:39:01</p>
+							</div>
+						</div>
+					</fieldset>
+				
+					<fieldset>
 						<legend><?php echo $title_modifications; ?></legend>
 	
 						<div class="form-group">
