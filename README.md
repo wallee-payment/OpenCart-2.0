@@ -1,3 +1,5 @@
+
+
 # OpenCart 2.0
 
 This repository contains the OpenCart  wallee payment module that enables the shop to process payments with [wallee](https://www.wallee.com).
@@ -11,7 +13,7 @@ This repository contains the OpenCart  wallee payment module that enables the sh
 
 ## Documentation
 
-* [English](https://plugin-documentation.wallee.com/wallee-payment/opencart-2.0/1.0.41/docs/en/documentation.html)
+* [English](https://plugin-documentation.wallee.com/wallee-payment/opencart-2.0/1.0.42/docs/en/documentation.html)
 
 ## Support
 
@@ -19,4 +21,4 @@ Support queries can be issued on the [wallee support site](https://app-wallee.co
 
 ## License
 
-Please see the [license file](https://github.com/wallee-payment/opencart-2.0/blob/1.0.41/LICENSE) for more information.
+Please see the [license file](https://github.com/wallee-payment/opencart-2.0/blob/1.0.42/LICENSE) for more information.
