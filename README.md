@@ -4,7 +4,7 @@
 
 This repository contains the OpenCart  wallee payment module that enables the shop to process payments with [wallee](https://www.wallee.com).
 
-##### To use this extension, a [wallee](https://www.wallee.com) account is required.
+##### To use this extension, a [wallee](https://app-wallee.com/user/signup) account is required.
 
 ## Requirements
 
@@ -13,7 +13,7 @@ This repository contains the OpenCart  wallee payment module that enables the sh
 
 ## Documentation
 
-* [English](https://plugin-documentation.wallee.com/wallee-payment/opencart-2.0/1.0.44/docs/en/documentation.html)
+* [English](https://plugin-documentation.wallee.com/wallee-payment/opencart-2.0/1.0.46/docs/en/documentation.html)
 
 ## Support
 
@@ -21,4 +21,4 @@ Support queries can be issued on the [wallee support site](https://app-wallee.co
 
 ## License
 
-Please see the [license file](https://github.com/wallee-payment/opencart-2.0/blob/1.0.44/LICENSE) for more information.
+Please see the [license file](https://github.com/wallee-payment/opencart-2.0/blob/1.0.46/LICENSE) for more information.
