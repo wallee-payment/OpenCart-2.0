@@ -13,7 +13,7 @@ This repository contains the OpenCart  wallee payment module that enables the sh
 
 ## Documentation
 
-* [English](https://plugin-documentation.wallee.com/wallee-payment/opencart-2.0/1.0.51/docs/en/documentation.html)
+* [English](https://plugin-documentation.wallee.com/wallee-payment/opencart-2.0/1.0.52/docs/en/documentation.html)
 
 ## Support
 
@@ -21,4 +21,4 @@ Support queries can be issued on the [wallee support site](https://app-wallee.co
 
 ## License
 
-Please see the [license file](https://github.com/wallee-payment/opencart-2.0/blob/1.0.51/LICENSE) for more information.
+Please see the [license file](https://github.com/wallee-payment/opencart-2.0/blob/1.0.52/LICENSE) for more information.
