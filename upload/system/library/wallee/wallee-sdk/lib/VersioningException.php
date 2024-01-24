@@ -27,7 +27,7 @@ use Exception;
  *
  * @category Class
  * @package  Wallee\Sdk
- * @author   customweb GmbH
+ * @author   wallee AG
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class VersioningException extends Exception {
@@ -35,5 +35,7 @@ class VersioningException extends Exception {
 	public function __construct($resourcePath) {
 		parent::__construct('A versioning/locking problem occurred during the API call to ' . $resourcePath . '.');
 	}
+
+}	}
 
 }

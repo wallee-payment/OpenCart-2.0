@@ -4,7 +4,7 @@
 	<name>wallee compatibility: patch for X-fee Pro.
 	</name>
 	<version>1.0.0</version>
-	<author>Customweb GmbH</author>
+	<author>wallee AG</author>
 	<link>http://github.com/wallee-payment/opencart</link>
 	<file path="catalog/model/total/xfeepro.php">
 		<operation>

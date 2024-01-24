@@ -35,7 +35,7 @@ use Wallee\Sdk\Service\TransactionService;
  *
  * @category Class
  * @package  Wallee\Sdk
- * @author   customweb GmbH
+ * @author   wallee AG
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class TransactionPaymentPageServiceTest extends TestCase
@@ -151,4 +151,6 @@ class TransactionPaymentPageServiceTest extends TestCase
         $paymentPageUrl = $this->apiClient->getTransactionPaymentPageService()->paymentPageUrl($this->spaceId, $transaction->getId());
         $this->assertEquals(0, strpos($paymentPageUrl, 'http'));
     }
+}
+ }
 }

@@ -29,7 +29,7 @@ use \Wallee\Sdk\ObjectSerializer;
  * @category    Class
  * @description The webhook identity represents a set of keys that will be used to sign the webhook messages.
  * @package     Wallee\Sdk
- * @author      customweb GmbH
+ * @author      wallee AG
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class WebhookIdentity implements ModelInterface, ArrayAccess
@@ -461,6 +461,10 @@ class WebhookIdentity implements ModelInterface, ArrayAccess
 
         return json_encode(ObjectSerializer::sanitizeForSerialization($this));
     }
+}
+
+
+
 }
 
 

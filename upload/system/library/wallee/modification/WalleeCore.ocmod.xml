@@ -4,7 +4,7 @@
 	<name>wallee core: load payment methods.
 	</name>
 	<version>1.0.4</version>
-	<author>Customweb GmbH</author>
+	<author>wallee AG</author>
 	<link>http://github.com/wallee-payment/opencart</link>
 	<file path="admin/controller/extension/payment.php">
 		<operation>

@@ -27,7 +27,7 @@ use \Exception;
  *
  * @category    Class
  * @package     Wallee\Sdk
- * @author      customweb GmbH
+ * @author      wallee AG
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class ObjectSerializer
@@ -507,5 +507,8 @@ class ObjectSerializer
         }
         return $qs ? (string) substr($qs, 0, -1) : '';
     }
+
+}
+}
 
 }

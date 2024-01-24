@@ -25,7 +25,7 @@ namespace Wallee\Sdk\Http;
  *
  * @category Class
  * @package  Wallee\Sdk\Http
- * @author   customweb GmbH
+ * @author   wallee AG
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 final class HttpResponse {
@@ -171,5 +171,7 @@ final class HttpResponse {
 		preg_match('/HTTP\/([^[:space:]])+[[:space:]]+([0-9]*)(.*)/i', $line, $result);
 		$this->statusCode = (int)$result[2];
 	}
+
+}	}
 
 }

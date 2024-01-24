@@ -1,11 +1,20 @@
 <?php
+/**
+ * Wallee OpenCart
+ *
+ * This OpenCart module enables to process payments with Wallee (https://www.wallee.com).
+ *
+ * @package Whitelabelshortcut\Wallee
+ * @author wallee AG (https://www.wallee.com)
+ * @license http://www.apache.org/licenses/LICENSE-2.0  Apache Software License (ASL 2.0)
+ */
 require_once modification(DIR_SYSTEM . 'library/wallee/helper.php');
 use Wallee\Model\AbstractModel;
 
 /**
  * This class handles the creation of all files required to display payment methods dynamically.
  *
- * @author sebastian
+ * @author wallee AG (https://www.wallee.com)
  *
  */
 class ModelExtensionWalleeDynamic extends AbstractModel {

@@ -27,7 +27,7 @@ use \Wallee\Sdk\ObjectSerializer;
  * @category    Class
  * @description A metric represents the usage of a resource that can be measured.
  * @package     Wallee\Sdk
- * @author      customweb GmbH
+ * @author      wallee AG
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class SubscriptionMetricCreate extends AbstractSubscriptionMetricUpdate 
@@ -357,6 +357,10 @@ class SubscriptionMetricCreate extends AbstractSubscriptionMetricUpdate
 
         return json_encode(ObjectSerializer::sanitizeForSerialization($this));
     }
+}
+
+
+
 }
 
 

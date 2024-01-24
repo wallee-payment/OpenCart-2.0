@@ -29,7 +29,7 @@ use \Wallee\Sdk\ObjectSerializer;
  * @category    Class
  * @description 
  * @package     Wallee\Sdk
- * @author      customweb GmbH
+ * @author      wallee AG
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class ShopifySubscriptionModelBillingConfiguration implements ModelInterface, ArrayAccess
@@ -517,6 +517,10 @@ class ShopifySubscriptionModelBillingConfiguration implements ModelInterface, Ar
 
         return json_encode(ObjectSerializer::sanitizeForSerialization($this));
     }
+}
+
+
+
 }
 
 

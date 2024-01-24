@@ -33,7 +33,7 @@ use Wallee\Sdk\Model\TransactionCreate;
  *
  * @category Class
  * @package  Wallee\Sdk
- * @author   customweb GmbH
+ * @author   wallee AG
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class TransactionLightboxServiceTest extends TestCase
@@ -152,4 +152,6 @@ class TransactionLightboxServiceTest extends TestCase
         $javascriptUrl = $this->apiClient->getTransactionLightboxService()->javascriptUrl($this->spaceId, $transaction->getId());
         $this->assertEquals(0, strpos($javascriptUrl, 'http'));
     }
+}
+ }
 }

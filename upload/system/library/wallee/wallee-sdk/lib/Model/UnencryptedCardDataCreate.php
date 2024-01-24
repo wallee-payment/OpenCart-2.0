@@ -29,7 +29,7 @@ use \Wallee\Sdk\ObjectSerializer;
  * @category    Class
  * @description This model holds the card data in plain.
  * @package     Wallee\Sdk
- * @author      customweb GmbH
+ * @author      wallee AG
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class UnencryptedCardDataCreate implements ModelInterface, ArrayAccess
@@ -430,6 +430,10 @@ class UnencryptedCardDataCreate implements ModelInterface, ArrayAccess
 
         return json_encode(ObjectSerializer::sanitizeForSerialization($this));
     }
+}
+
+
+
 }
 
 

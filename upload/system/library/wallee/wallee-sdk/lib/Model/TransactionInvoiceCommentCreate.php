@@ -27,7 +27,7 @@ use \Wallee\Sdk\ObjectSerializer;
  * @category    Class
  * @description 
  * @package     Wallee\Sdk
- * @author      customweb GmbH
+ * @author      wallee AG
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class TransactionInvoiceCommentCreate extends AbstractTransactionInvoiceCommentActive 
@@ -290,6 +290,10 @@ class TransactionInvoiceCommentCreate extends AbstractTransactionInvoiceCommentA
 
         return json_encode(ObjectSerializer::sanitizeForSerialization($this));
     }
+}
+
+
+
 }
 
 

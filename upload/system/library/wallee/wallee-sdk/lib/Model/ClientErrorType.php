@@ -27,7 +27,7 @@ use \Wallee\Sdk\ObjectSerializer;
  * @category    Class
  * @description The type of Client Errors which can be returned by a service.
  * @package     Wallee\Sdk
- * @author      customweb GmbH
+ * @author      wallee AG
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class ClientErrorType
@@ -51,6 +51,10 @@ class ClientErrorType
             self::DEVELOPER_ERROR,
         ];
     }
+}
+
+
+
 }
 
 

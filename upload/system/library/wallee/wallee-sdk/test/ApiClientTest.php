@@ -30,7 +30,7 @@ use Wallee\Sdk\Service\PaymentMethodService;
  *
  * @category Class
  * @package  Wallee\Sdk
- * @author   customweb GmbH
+ * @author   wallee AG
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 final class ApiClientTest extends TestCase
@@ -104,6 +104,10 @@ final class ApiClientTest extends TestCase
         echo getenv('WLE_HTTP_CLIENT') . PHP_EOL;
         $this->callApi();
     }
+
+}
+
+
 
 }
 

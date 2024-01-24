@@ -29,7 +29,7 @@ use \Wallee\Sdk\ObjectSerializer;
  * @category    Class
  * @description The subscription charge represents a single charge carried out for a particular subscription.
  * @package     Wallee\Sdk
- * @author      customweb GmbH
+ * @author      wallee AG
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class SubscriptionCharge implements ModelInterface, ArrayAccess
@@ -971,6 +971,10 @@ class SubscriptionCharge implements ModelInterface, ArrayAccess
 
         return json_encode(ObjectSerializer::sanitizeForSerialization($this));
     }
+}
+
+
+
 }
 
 

@@ -29,7 +29,7 @@ use \Wallee\Sdk\ObjectSerializer;
  * @category    Class
  * @description This error is thrown when something unexpected happens on our side.
  * @package     Wallee\Sdk
- * @author      customweb GmbH
+ * @author      wallee AG
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class ServerError implements ModelInterface, ArrayAccess
@@ -357,6 +357,10 @@ class ServerError implements ModelInterface, ArrayAccess
 
         return json_encode(ObjectSerializer::sanitizeForSerialization($this));
     }
+}
+
+
+
 }
 
 

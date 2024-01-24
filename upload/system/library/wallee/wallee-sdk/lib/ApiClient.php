@@ -30,7 +30,7 @@ use Wallee\Sdk\Http\HttpClientFactory;
  *
  * @category Class
  * @package  Wallee\Sdk
- * @author   customweb GmbH
+ * @author   wallee AG
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 final class ApiClient {
@@ -1640,5 +1640,8 @@ final class ApiClient {
         return $this->webhookUrlService;
     }
     
+
+}
+ 
 
 }

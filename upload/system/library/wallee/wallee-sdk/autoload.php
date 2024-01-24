@@ -21,7 +21,7 @@
 /**
  * Autoload function.
  *
- * @author   customweb GmbH
+ * @author   wallee AG
  
  * After registering this autoload function with SPL, the following line
  * would cause the function to attempt to load the \Wallee\Sdk\Baz\Qux class
@@ -58,4 +58,4 @@ spl_autoload_register(function ($class) {
 	if (file_exists($file)) {
 		require $file;
 	}
-}, true, true);
+}, true, true);rue);

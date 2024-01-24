@@ -27,7 +27,7 @@ use Exception;
  *
  * @category Class
  * @package  Wallee\Sdk
- * @author   customweb GmbH
+ * @author   wallee AG
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 final class ValidationException extends Exception {
@@ -75,5 +75,7 @@ final class ValidationException extends Exception {
 	public function getModel() {
 		return $this->model;
 	}
+
+}	}
 
 }

@@ -27,7 +27,7 @@ use \Exception;
  *
  * @category Class
  * @package  Wallee\Sdk\Http
- * @author   customweb GmbH
+ * @author   wallee AG
  * @license  http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 final class ConnectionException extends Exception {
@@ -94,5 +94,8 @@ final class ConnectionException extends Exception {
 	public function getErrorMessage() {
 		return $this->errorMessage;
 	}
+
+}
+}
 
 }

@@ -27,7 +27,7 @@ use \Wallee\Sdk\ObjectSerializer;
  * @category    Class
  * @description 
  * @package     Wallee\Sdk
- * @author      customweb GmbH
+ * @author      wallee AG
  * @license     http://www.apache.org/licenses/LICENSE-2.0 Apache License v2
  */
 class SubscriptionSuspensionRunning extends SubscriptionSuspension 
@@ -260,6 +260,10 @@ class SubscriptionSuspensionRunning extends SubscriptionSuspension
 
         return json_encode(ObjectSerializer::sanitizeForSerialization($this));
     }
+}
+
+
+
 }
 
 
